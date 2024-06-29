@@ -1,5 +1,6 @@
 <ul class="layout-menu">
-    <div style="margin-top: 1rem">
-        <p-panelMenu [model]="model" [multiple]="true"></p-panelMenu>
-    </div>
+  <ng-container *ngFor="let item of model; let i = index;">
+    <li *ngIf="!item.separator" [index]="i" [item]="item" [root]="true" app-menuitem></li>
+    <li *ngIf="item.separator" class="menu-separator"></li>
+  </ng-container>
 </ul>

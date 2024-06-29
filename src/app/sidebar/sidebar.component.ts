@@ -5,12 +5,15 @@ import {MenuItem} from 'primeng/api';
 import {PanelMenuModule} from 'primeng/panelmenu';
 
 import {LayoutService} from '../layout/service/app.layout.service';
+import {BadgeModule} from "primeng/badge";
+import {Ripple} from "primeng/ripple";
+import {SidebarItem} from "@src/app/sidebar/sidebar.item";
 
 @Component({
     selector: 'app-sidebar',
     templateUrl: './sidebar.component.html',
     standalone: true,
-    imports: [NgFor, NgIf, PanelMenuModule]
+  imports: [NgFor, NgIf, PanelMenuModule, BadgeModule, Ripple, SidebarItem]
 })
 export class SidebarComponent implements OnInit {
 
@@ -32,6 +35,7 @@ export class SidebarComponent implements OnInit {
                 label: 'Pages',
                 icon: 'pi pi-map',
                 expanded: true,
+                badge: '2',
                 items: [
                     {
                         label: 'Landing',
@@ -41,9 +45,11 @@ export class SidebarComponent implements OnInit {
                     {
                         label: 'Auth',
                         icon: 'pi pi-fw pi-user',
+                        badge: '2',
                         items: [
                             {
                                 label: 'Login',
+                                shortcut: '⌘+S',
                                 icon: 'pi pi-fw pi-sign-in',
                                 routerLink: ['/auth/login']
                             },

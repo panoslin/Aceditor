@@ -8,7 +8,6 @@ import {ButtonModule} from 'primeng/button';
 import {SidebarModule} from 'primeng/sidebar';
 
 import {LayoutService} from '../service/app.layout.service';
-import {MenuService} from '../app.menu.service';
 
 @Component({
     selector: 'app-config',
@@ -32,7 +31,6 @@ export class AppConfigComponent {
 
     constructor(
         public layoutService: LayoutService,
-        public menuService: MenuService
     ) {
     }
 
