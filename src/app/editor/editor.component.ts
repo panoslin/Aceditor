@@ -1,7 +1,8 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {EditorModule} from 'primeng/editor';
 import {FormsModule} from '@angular/forms';
 import Quill from 'quill';
+import {LayoutService} from "@src/app/layout/service/app.layout.service";
 
 @Component({
   selector: 'app-editor',
@@ -10,9 +11,9 @@ import Quill from 'quill';
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.scss'
 })
-export class EditorComponent implements AfterViewInit {
+export class EditorComponent implements AfterViewInit, OnInit {
   @ViewChild('editor', {static: true}) editor!: ElementRef;
-  @ViewChild('toolbar', {static: true}) toolbar!: ElementRef;
+  toolbar!: ElementRef;
   quill!: Quill;
 
 //   text: string = `
@@ -111,6 +112,12 @@ export class EditorComponent implements AfterViewInit {
   //     'clean'
   //   ]                                         // remove formatting button
   // ];
+  constructor(private layoutService: LayoutService) {
+  }
+
+  ngOnInit(): void {
+    this.toolbar = this.layoutService.getToolbarElementRef();
+  }
 
   ngAfterViewInit() {
     this.quill = new Quill(this.editor.nativeElement, {

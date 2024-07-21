@@ -1,4 +1,4 @@
-import {effect, Injectable, signal} from '@angular/core';
+import {effect, Injectable, signal, ElementRef} from '@angular/core';
 import {Subject} from 'rxjs';
 
 export interface AppConfig {
@@ -23,6 +23,15 @@ interface LayoutState {
     providedIn: 'root',
 })
 export class LayoutService {
+  private toolbarElementRef!: ElementRef;
+
+  setToolbarElementRef(elementRef: ElementRef) {
+    this.toolbarElementRef = elementRef;
+  }
+
+  getToolbarElementRef(): ElementRef {
+    return this.toolbarElementRef;
+  }
     _config: AppConfig = {
         ripple: false,
         inputStyle: 'outlined',

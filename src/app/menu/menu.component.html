@@ -8,13 +8,72 @@
         <i class="pi pi-bars"></i>
     </button>
 
+  <div #toolbar id="toolbar" class="p-editor-toolbar" style="border: none !important;">
+    <select class="ql-font" style="width: 11rem">
+      <option selected>Times New Roman</option>
+      <option value="arial">Arial</option>
+      <option value="comic-sans">Comic Sans</option>
+      <option value="courier-new">Courier New</option>
+      <option value="georgia">Georgia</option>
+      <option value="helvetica">Helvetica</option>
+      <option value="lucida">Lucida</option>
+    </select>
+    <select class="ql-size">
+      <option value="10px">10px</option>
+      <option value="12px">12px</option>
+      <option value="14px">14px</option>
+      <option value="16px" selected>16px</option>
+      <option value="18px">18px</option>
+      <option value="24px">24px</option>
+      <option value="36px">36px</option>
+    </select>
+    <select class="ql-header">
+      <option value="1">H1</option>
+      <option value="2">H2</option>
+      <option value="3">H3</option>
+      <option value="4">H4</option>
+      <option value="5">H5</option>
+      <option value="6">H6</option>
+      <option selected>Normal</option>
+    </select>
+    <button class="ql-bold" aria-label="Bold"></button>
+    <button class="ql-italic" aria-label="Italic"></button>
+    <button class="ql-underline" aria-label="Underline"></button>
+    <button class="ql-strike" aria-label="Strike"></button>
+    <button class="ql-blockquote" aria-label="Blockquote"></button>
+    <button class="ql-code-block" aria-label="Code Block"></button>
+    <!--  <button class="ql-header" value="1">H1</button>-->
+    <!--  <button class="ql-header" value="2">H2</button>-->
+    <button class="ql-list" value="ordered">Ordered List</button>
+    <button class="ql-list" value="bullet">Bullet List</button>
+    <!--    <button class="ql-script" value="sub">Subscript</button>-->
+    <!--    <button class="ql-script" value="super">Superscript</button>-->
+    <!--  <button class="ql-indent" value="-1">Outdent</button>-->
+    <!--  <button class="ql-indent" value="+1">Indent</button>-->
+    <!--  <button class="ql-direction" value="rtl">RTL</button>-->
+    <!--  <select class="ql-size">-->
+    <!--    <option value="small">Small</option>-->
+    <!--    <option selected>Normal</option>-->
+    <!--    <option value="large">Large</option>-->
+    <!--    <option value="huge">Huge</option>-->
+    <!--  </select>-->
+
+    <select class="ql-color"></select>
+    <select class="ql-background"></select>
+    <select class="ql-align"></select>
+    <button class="ql-link">Link</button>
+    <button class="ql-image">Image</button>
+    <!--    <button class="ql-video">Video</button>-->
+    <button class="ql-clean">Remove Formatting</button>
+  </div>
+
     <button #topbarmenubutton (click)="layoutService.showProfileSidebar()"
             class="p-link layout-topbar-menu-button layout-topbar-button">
         <i class="pi pi-ellipsis-v"></i>
     </button>
 
-    <div #topbarmenu [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}"
-         class="layout-topbar-menu">
-        <p-menubar class="p-link" [model]="items"></p-menubar>
-    </div>
+<!--    <div #topbarmenu [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}"-->
+<!--         class="layout-topbar-menu">-->
+<!--        <p-menubar class="p-link" [model]="items"></p-menubar>-->
+<!--    </div>-->
 </div>
