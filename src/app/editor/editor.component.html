@@ -1,1 +1,108 @@
-<p-editor [(ngModel)]="text" [style]="{ height: '85vh' }"/>
+<!--<p-editor [(ngModel)]="text" [style]="{ height: '25vh' }">-->
+<!--  <ng-template pTemplate="header">-->
+<!--    <span class="ql-formats">-->
+<!--      <button class="ql-bold" aria-label="Bold"></button>-->
+<!--      <button class="ql-italic" aria-label="Italic"></button>-->
+<!--      <button class="ql-underline" aria-label="Underline"></button>-->
+<!--      <button class="ql-strike" aria-label="Strike"></button>-->
+<!--      <button class="ql-blockquote" aria-label="Blockquote"></button>-->
+<!--      <button class="ql-code-block" aria-label="Code Block"></button>-->
+<!--      <button class="ql-header" value="1">H1</button>-->
+<!--      <button class="ql-header" value="2">H2</button>-->
+<!--      <button class="ql-list" value="ordered">Ordered List</button>-->
+<!--      <button class="ql-list" value="bullet">Bullet List</button>-->
+<!--      <button class="ql-script" value="sub">Subscript</button>-->
+<!--      <button class="ql-script" value="super">Superscript</button>-->
+<!--      <button class="ql-indent" value="-1">Outdent</button>-->
+<!--      <button class="ql-indent" value="+1">Indent</button>-->
+<!--      <button class="ql-direction" value="rtl">RTL</button>-->
+<!--      <select class="ql-size">-->
+<!--        <option value="small">Small</option>-->
+<!--        <option selected>Normal</option>-->
+<!--        <option value="large">Large</option>-->
+<!--        <option value="huge">Huge</option>-->
+<!--      </select>-->
+<!--      <select class="ql-header">-->
+<!--        <option value="1">H1</option>-->
+<!--        <option value="2">H2</option>-->
+<!--        <option value="3">H3</option>-->
+<!--        <option value="4">H4</option>-->
+<!--        <option value="5">H5</option>-->
+<!--        <option value="6">H6</option>-->
+<!--        <option selected>Normal</option>-->
+<!--      </select>-->
+<!--      <select class="ql-color"></select>-->
+<!--      <select class="ql-background"></select>-->
+<!--      <select class="ql-font">-->
+<!--        <option value="arial">Arial</option>-->
+<!--        <option value="comic-sans">Comic Sans</option>-->
+<!--        <option value="courier-new">Courier New</option>-->
+<!--        <option value="georgia">Georgia</option>-->
+<!--        <option value="helvetica">Helvetica</option>-->
+<!--        <option value="lucida">Lucida</option>-->
+<!--        <option value="times-new-roman">Times New Roman</option>-->
+<!--      </select>-->
+<!--      <select class="ql-align"></select>-->
+<!--      <button class="ql-link">Link</button>-->
+<!--      <button class="ql-image">Image</button>-->
+<!--      <button class="ql-video">Video</button>-->
+<!--      <button class="ql-clean">Remove Formatting</button>-->
+<!--    </span>-->
+<!--  </ng-template>-->
+<!--</p-editor>-->
+
+<div class="p-editor-container" style="height: 85vh">
+  <div #toolbar id="toolbar" class="p-editor-toolbar">
+
+    <select class="ql-font" style="width: 11rem">
+      <option selected >Times New Roman</option>
+      <option value="arial">Arial</option>
+      <option value="comic-sans">Comic Sans</option>
+      <option value="courier-new">Courier New</option>
+      <option value="georgia">Georgia</option>
+      <option value="helvetica">Helvetica</option>
+      <option value="lucida">Lucida</option>
+    </select>
+    <select class="ql-header">
+      <option value="1">H1</option>
+      <option value="2">H2</option>
+      <option value="3">H3</option>
+      <option value="4">H4</option>
+      <option value="5">H5</option>
+      <option value="6">H6</option>
+      <option selected>Normal</option>
+    </select>
+    <button class="ql-bold" aria-label="Bold"></button>
+    <button class="ql-italic" aria-label="Italic"></button>
+    <button class="ql-underline" aria-label="Underline"></button>
+    <button class="ql-strike" aria-label="Strike"></button>
+    <button class="ql-blockquote" aria-label="Blockquote"></button>
+    <button class="ql-code-block" aria-label="Code Block"></button>
+    <!--  <button class="ql-header" value="1">H1</button>-->
+    <!--  <button class="ql-header" value="2">H2</button>-->
+    <button class="ql-list" value="ordered">Ordered List</button>
+    <button class="ql-list" value="bullet">Bullet List</button>
+    <button class="ql-script" value="sub">Subscript</button>
+    <button class="ql-script" value="super">Superscript</button>
+    <!--  <button class="ql-indent" value="-1">Outdent</button>-->
+    <!--  <button class="ql-indent" value="+1">Indent</button>-->
+    <!--  <button class="ql-direction" value="rtl">RTL</button>-->
+    <!--  <select class="ql-size">-->
+    <!--    <option value="small">Small</option>-->
+    <!--    <option selected>Normal</option>-->
+    <!--    <option value="large">Large</option>-->
+    <!--    <option value="huge">Huge</option>-->
+    <!--  </select>-->
+
+    <select class="ql-color"></select>
+    <select class="ql-background"></select>
+    <select class="ql-align"></select>
+    <button class="ql-link">Link</button>
+    <button class="ql-image">Image</button>
+    <button class="ql-video">Video</button>
+    <button class="ql-clean">Remove Formatting</button>
+  </div>
+  <div #editor id="editor" class="p-editor-content" style="font-size: 16px; font-family: 'Times New Roman', serif">
+  </div>
+
+</div>
