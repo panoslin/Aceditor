@@ -14,6 +14,7 @@ export class EditorComponent implements AfterViewInit {
   @ViewChild('editor', {static: true}) editor!: ElementRef;
   @ViewChild('toolbar', {static: true}) toolbar!: ElementRef;
   quill!: Quill;
+
 //   text: string = `
 //                 <h1 class="ql-align-center">Quill Rich Text Editor</h1>
 //                 <p><br></p>
@@ -127,6 +128,12 @@ export class EditorComponent implements AfterViewInit {
     Font.whitelist = ['arial', 'comic-sans', 'courier-new', 'georgia', 'helvetica', 'lucida', 'times-new-roman'];
     // @ts-ignore
     Quill.register(Font, true);
+
+    var Size = Quill.import('attributors/style/size');
+    // @ts-ignore
+    Size.whitelist = ['10px', '12px', '14px', '16px', '18px', '24px', '36px'];
+    // @ts-ignore
+    Quill.register(Size, true);
   }
 
 }

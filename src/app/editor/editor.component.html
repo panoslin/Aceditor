@@ -55,13 +55,22 @@
   <div #toolbar id="toolbar" class="p-editor-toolbar">
 
     <select class="ql-font" style="width: 11rem">
-      <option selected >Times New Roman</option>
+      <option selected>Times New Roman</option>
       <option value="arial">Arial</option>
       <option value="comic-sans">Comic Sans</option>
       <option value="courier-new">Courier New</option>
       <option value="georgia">Georgia</option>
       <option value="helvetica">Helvetica</option>
       <option value="lucida">Lucida</option>
+    </select>
+    <select class="ql-size">
+      <option value="10px">10px</option>
+      <option value="12px">12px</option>
+      <option value="14px">14px</option>
+      <option value="16px" selected>16px</option>
+      <option value="18px">18px</option>
+      <option value="24px">24px</option>
+      <option value="36px">36px</option>
     </select>
     <select class="ql-header">
       <option value="1">H1</option>
@@ -82,8 +91,8 @@
     <!--  <button class="ql-header" value="2">H2</button>-->
     <button class="ql-list" value="ordered">Ordered List</button>
     <button class="ql-list" value="bullet">Bullet List</button>
-    <button class="ql-script" value="sub">Subscript</button>
-    <button class="ql-script" value="super">Superscript</button>
+    <!--    <button class="ql-script" value="sub">Subscript</button>-->
+    <!--    <button class="ql-script" value="super">Superscript</button>-->
     <!--  <button class="ql-indent" value="-1">Outdent</button>-->
     <!--  <button class="ql-indent" value="+1">Indent</button>-->
     <!--  <button class="ql-direction" value="rtl">RTL</button>-->
@@ -99,7 +108,7 @@
     <select class="ql-align"></select>
     <button class="ql-link">Link</button>
     <button class="ql-image">Image</button>
-    <button class="ql-video">Video</button>
+    <!--    <button class="ql-video">Video</button>-->
     <button class="ql-clean">Remove Formatting</button>
   </div>
   <div #editor id="editor" class="p-editor-content" style="font-size: 16px; font-family: 'Times New Roman', serif">
