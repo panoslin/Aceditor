@@ -19,23 +19,24 @@ export class EditorComponent implements AfterViewInit, OnInit {
   text: string = `
   <h1 class="ql-align-center">Quill Rich Text Editor</h1>
   <p>Quill is a free, <a href="https://github.com/slab/quill/">open source</a> WYSIWYG editor built for the modern web. With its <a href="https://quilljs.com/docs/modules/">modular architecture</a> and expressive <a href="https://quilljs.com/docs/api">API</a>, it is completely customizable to fit any need.</p>
-  <h2 class="ql-align-center">Getting Started is Easy</h2>
-  <pre data-language="javascript" class="ql-syntax" spellcheck="false"><span class="hljs-comment">// &lt;link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet"&gt;</span>
-    <span class="hljs-comment">// &lt;script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"&gt;&lt;/script&gt;</span>
+<!--  <h2 class="ql-align-center">Getting Started is Easy</h2>-->
+<!--  <pre data-language="javascript" class="ql-syntax" spellcheck="false"><span class="hljs-comment">// &lt;link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet"&gt;</span>-->
+<!--    <span class="hljs-comment">// &lt;script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"&gt;&lt;/script&gt;</span>-->
 
-    <span class="hljs-keyword">const</span> quill = <span class="hljs-keyword">new</span> Quill(<span class="hljs-string">'#editor'</span>,
-    {
-      modules: {
-        toolbar: <span class="hljs-string">'#toolbar'</span>
-      },
-      theme: <span class="hljs-string">'snow'</span>
-    });
+<!--    <span class="hljs-keyword">const</span> quill = <span class="hljs-keyword">new</span> Quill(<span class="hljs-string">'#editor'</span>,-->
+<!--    {-->
+<!--      modules: {-->
+<!--        toolbar: <span class="hljs-string">'#toolbar'</span>-->
+<!--      },-->
+<!--      theme: <span class="hljs-string">'snow'</span>-->
+<!--    });-->
 
-    <span class="hljs-comment">// Open your browser's developer console to try out the API!</span>
-  </pre>
-  <p class="ql-align-center"><strong>Built with</strong></p>
-  <p class="ql-align-center"><span class="ql-formula" data-value="x^2 + (y - \\\\sqrt[3]{x^2})^2 = 1"></span></p>
-  <p><br></p>`;
+<!--    <span class="hljs-comment">// Open your browser's developer console to try out the API!</span>-->
+<!--  </pre>-->
+<!--  <p class="ql-align-center"><strong>Built with</strong></p>-->
+<!--  <p class="ql-align-center"><span class="ql-formula" data-value="x^2 + (y - \\\\sqrt[3]{x^2})^2 = 1"></span></p>-->
+<!--  <p><br></p>-->
+  `;
   // toolbarOptions = [
   //   // [{'bold': ['bold', 'italic', 'underline', 'strike']}],
   //   [
@@ -135,7 +136,7 @@ export class EditorComponent implements AfterViewInit, OnInit {
     Quill.register(Size, true);
 
     this.editor.nativeElement.querySelector('.ql-editor').style.borderRadius = '12px';
-    // this.editor.nativeElement.querySelector('.ql-editor').style.background = '#f1f1f1';
+    this.editor.nativeElement.querySelector('.ql-editor').style.background = '#f1f1f1';
     this.editor.nativeElement.querySelector('.ql-editor').style.padding = '5% 8% 25px';
     this.editor.nativeElement.querySelector('.ql-editor').style.boxShadow = '0px 3px 5px rgba(0, 0, 0, 0.02),\n' +
       '    0px 0px 2px rgba(0, 0, 0, 0.05),\n' +
