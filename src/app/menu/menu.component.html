@@ -1,12 +1,12 @@
 <div class="layout-topbar">
-    <a class="layout-topbar-logo" routerLink="">
-        <img alt="logo" src="../../assets/layout/images/logo.png">
-        <span>ACEditor</span>
-    </a>
+  <a class="layout-topbar-logo" routerLink="">
+    <img alt="logo" src="../../assets/layout/images/logo.png">
+    <span>ACEditor</span>
+  </a>
 
-    <button #menubutton (click)="layoutService.onMenuToggle()" class="p-link layout-menu-button layout-topbar-button" style="margin-right: 8px">
-        <i class="pi pi-bars"></i>
-    </button>
+  <button #menubutton (click)="layoutService.onMenuToggle()" class="p-link layout-menu-button layout-topbar-button" style="margin-right: 8px">
+    <i class="pi pi-bars"></i>
+  </button>
 
   <div #toolbar id="toolbar" class="p-editor-toolbar" style="border: none !important;">
     <select class="ql-font" style="width: 11rem">
@@ -67,13 +67,22 @@
     <button class="ql-clean">Remove Formatting</button>
   </div>
 
-<!--    <button #topbarmenubutton (click)="layoutService.showProfileSidebar()"-->
-<!--            class="p-link layout-topbar-menu-button layout-topbar-button">-->
-<!--        <i class="pi pi-ellipsis-v"></i>-->
-<!--    </button>-->
+      <button #topbarmenubutton (click)="layoutService.showProfileSidebar()"
+              class="p-link layout-topbar-menu-button layout-topbar-button">
+          <i class="pi pi-ellipsis-v"></i>
+      </button>
 
-<!--    <div #topbarmenu [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}"-->
-<!--         class="layout-topbar-menu">-->
-<!--        <p-menubar class="p-link" [model]="items"></p-menubar>-->
-<!--    </div>-->
+  <div #topbarmenu [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}"
+       class="layout-topbar-menu">
+
+    <button class="p-link layout-topbar-button">
+      <i class="pi pi-user"></i>
+      <span>Profile</span>
+    </button>
+    <button class="p-link layout-topbar-button">
+      <i class="pi pi-cog"></i>
+      <span>Settings</span>
+    </button>
+<!--    <p-menubar class="p-link" [model]="items"></p-menubar>-->
+  </div>
 </div>
