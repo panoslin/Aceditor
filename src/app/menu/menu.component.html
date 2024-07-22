@@ -67,10 +67,10 @@
     <button class="ql-clean">Remove Formatting</button>
   </div>
 
-      <button #topbarmenubutton (click)="layoutService.showProfileSidebar()"
-              class="p-link layout-topbar-menu-button layout-topbar-button">
-          <i class="pi pi-ellipsis-v"></i>
-      </button>
+  <button #topbarmenubutton (click)="layoutService.showProfileSidebar()"
+          class="p-link layout-topbar-menu-button layout-topbar-button">
+    <i class="pi pi-ellipsis-v"></i>
+  </button>
 
   <div #topbarmenu [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}"
        class="layout-topbar-menu">
@@ -79,10 +79,40 @@
       <i class="pi pi-user"></i>
       <span>Profile</span>
     </button>
-    <button class="p-link layout-topbar-button">
+    <button class="p-link layout-topbar-button" (click)="showSettingDialog()">
       <i class="pi pi-cog"></i>
       <span>Settings</span>
     </button>
-<!--    <p-menubar class="p-link" [model]="items"></p-menubar>-->
+
+    <p-dialog
+      header="Settings"
+      [(visible)]="settingDialogVisible"
+      [style]="{ width: '30rem' }"
+      (onHide)="hideSettingDialog()"
+    >
+      <span class="p-text-secondary block mb-5">Update your information.</span>
+      <div class="flex align-items-center gap-3 mb-3">
+        <label for="token" class="font-semibold w-12rem">chatGPT Token</label>
+        <input pInputText id="token" class="flex-auto" autocomplete="off"/>
+      </div>
+
+      <div class="flex align-items-center gap-3 mb-3">
+        <label class="font-semibold w-12rem">chatGPT Model</label>
+        <p-dropdown
+          [options]="[{name: 'GPT-3.5 Turbo', code: 'gpt-3.5-turbo'}, {name: 'GPT-4o', code: 'gpt-4o'}]"
+          [(ngModel)]="selectedModel"
+          optionLabel="name"
+          [style]="{ width: '100%' }"
+          placeholder='GPT-3.5 Turbo'/>
+      </div>
+
+
+      <div class="flex justify-content-end gap-2">
+        <p-button label="Cancel" severity="secondary" (onClick)="hideSettingDialog()"/>
+        <p-button label="Save" (onClick)="hideSettingDialog()"/>
+      </div>
+    </p-dialog>
+
+    <!--    <p-menubar class="p-link" [model]="items"></p-menubar>-->
   </div>
 </div>

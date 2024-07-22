@@ -4,12 +4,17 @@ import {NgClass} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {MenubarModule} from 'primeng/menubar';
 import {MenuItem} from 'primeng/api';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   standalone: true,
-  imports: [RouterLink, NgClass, MenubarModule]
+  imports: [RouterLink, NgClass, MenubarModule, DialogModule, ButtonModule, InputTextModule, DropdownModule, FormsModule]
 })
 export class MenuComponent {
   items!: MenuItem[];
@@ -22,6 +27,19 @@ export class MenuComponent {
 
   @ViewChild('toolbar', {static: true}) toolbar!: ElementRef;
 
+  settingDialogVisible: boolean = false;
+  selectedModel: { name: string, code: string } = {
+    name: 'GPT-3.5 Turbo',
+    code: 'gpt-3.5-turbo'
+  };
+
+  showSettingDialog() {
+    this.settingDialogVisible = true;
+  }
+
+  hideSettingDialog() {
+    this.settingDialogVisible = false;
+  }
   constructor(public layoutService: LayoutService) {
     this.items = [
       {
