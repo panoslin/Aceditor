@@ -7,17 +7,17 @@ import {MenuItem} from 'primeng/api';
 import {DialogModule} from 'primeng/dialog';
 import {ButtonModule} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
-import {DropdownModule} from 'primeng/dropdown';
-import {FormsModule} from '@angular/forms';
-import { CheckboxModule } from 'primeng/checkbox';
-import {AvatarModule} from "primeng/avatar";
+import {SplitButtonModule} from "primeng/splitbutton";
+import {CheckboxModule} from "primeng/checkbox";
+import {DropdownModule} from "primeng/dropdown";
+import {FormsModule} from "@angular/forms";
 import {Ripple} from "primeng/ripple";
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   standalone: true,
-  imports: [RouterLink, NgClass, MenubarModule, DialogModule, ButtonModule, InputTextModule, DropdownModule, FormsModule, CheckboxModule, AvatarModule, Ripple]
+  imports: [RouterLink, NgClass, MenubarModule, DialogModule, ButtonModule, InputTextModule, SplitButtonModule, CheckboxModule, DropdownModule, FormsModule, Ripple],
 })
 export class MenuComponent {
   items!: MenuItem[];
@@ -37,6 +37,28 @@ export class MenuComponent {
     code: 'gpt-3.5-turbo'
   };
   protected authDialogVisible: boolean = false;
+  protected AISidebarVisible: boolean = false;
+  selectedPrompt: string = '';
+  prompts: MenuItem[] = [
+    {label: 'Summarize'},
+    {label: 'Improve'},
+    {label: 'Simplify'},
+    {label: 'Expand'},
+    {
+      label: 'Change Tone',
+      items: [
+        {label: 'Professional'},
+        {label: 'Casual'},
+      ]
+    },
+    {
+      label: 'Change Style',
+      items: [
+        {label: 'Business'},
+        {label: 'Academic'},
+      ]
+    }
+  ];
 
   toggleSettingDialog() {
     this.settingDialogVisible = !this.settingDialogVisible;
@@ -112,5 +134,9 @@ export class MenuComponent {
 
   protected hideAuthDialog() {
     this.authDialogVisible = false;
+  }
+
+  toggleAISidebar() {
+    this.AISidebarVisible = !this.AISidebarVisible;
   }
 }

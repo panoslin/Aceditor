@@ -67,6 +67,13 @@
     <button class="ql-clean">Remove Formatting</button>
   </div>
 
+  <p-splitButton
+    icon="pi pi-sparkles"
+    [model]="prompts"
+    severity="help"
+    [style]="{height: '1.9rem', 'margin-top': '-1.5px', 'width': '4.5rem'}"
+  />
+
   <button #topbarmenubutton (click)="layoutService.showProfileSidebar()"
           class="p-link layout-topbar-menu-button layout-topbar-button">
     <i class="pi pi-ellipsis-v"></i>
