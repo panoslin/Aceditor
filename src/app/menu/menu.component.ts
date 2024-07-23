@@ -9,12 +9,15 @@ import {ButtonModule} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
 import {DropdownModule} from 'primeng/dropdown';
 import {FormsModule} from '@angular/forms';
+import { CheckboxModule } from 'primeng/checkbox';
+import {AvatarModule} from "primeng/avatar";
+import {Ripple} from "primeng/ripple";
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   standalone: true,
-  imports: [RouterLink, NgClass, MenubarModule, DialogModule, ButtonModule, InputTextModule, DropdownModule, FormsModule]
+  imports: [RouterLink, NgClass, MenubarModule, DialogModule, ButtonModule, InputTextModule, DropdownModule, FormsModule, CheckboxModule, AvatarModule, Ripple]
 })
 export class MenuComponent {
   items!: MenuItem[];
@@ -33,9 +36,11 @@ export class MenuComponent {
     name: 'GPT-3.5 Turbo',
     code: 'gpt-3.5-turbo'
   };
+  protected authDialogVisible: boolean = false;
 
-  showSettingDialog() {
-    this.settingDialogVisible = true;
+  toggleSettingDialog() {
+    this.settingDialogVisible = !this.settingDialogVisible;
+    this.hideAuthDialog();
   }
 
   hideSettingDialog() {
@@ -98,5 +103,14 @@ export class MenuComponent {
 
   ngOnInit(): void {
     this.layoutService.setToolbarElementRef(this.toolbar);
+  }
+
+  toggleAuthDialog() {
+    this.authDialogVisible = !this.authDialogVisible;
+    this.hideSettingDialog()
+  }
+
+  protected hideAuthDialog() {
+    this.authDialogVisible = false;
   }
 }

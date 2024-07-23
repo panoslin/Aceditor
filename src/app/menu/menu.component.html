@@ -75,15 +75,52 @@
   <div #topbarmenu [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}"
        class="layout-topbar-menu">
 
-    <button class="p-link layout-topbar-button">
+    <button class="p-link layout-topbar-button" (click)="toggleAuthDialog()">
       <i class="pi pi-user"></i>
       <span>Profile</span>
     </button>
-    <button class="p-link layout-topbar-button" (click)="showSettingDialog()">
+
+    <!--Login Dialog-->
+    <p-dialog
+      header="Header"
+      [(visible)]="authDialogVisible"
+      [style]="{ width: '35rem' }"
+      closable="false"
+    >
+      <ng-template pTemplate="header">
+        <div class="text-center mb-5 w-full">
+          <img src="../../assets/layout/images/logo.png" alt="Image" height="50" class="mb-3">
+          <div class="text-900 text-3xl font-medium mb-3">Welcome Back</div>
+          <span class="text-600 font-medium line-height-3">Don't have an account?</span>
+          <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Create today!</a>
+        </div>
+
+      </ng-template>
+      <div>
+        <label for="email1" class="block text-900 font-medium mb-2">Email</label>
+        <input id="email1" type="text" pInputText class="w-full mb-3">
+
+        <label for="password1" class="block text-900 font-medium mb-2">Password</label>
+        <input id="password1" type="password" pInputText class="w-full mb-3">
+
+        <div class="flex align-items-center justify-content-between mb-6">
+          <div class="flex align-items-center">
+            <p-checkbox id="rememberme1" [binary]="true" styleClass="mr-2"></p-checkbox>
+            <label for="rememberme1">Remember me</label>
+          </div>
+          <!--          <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>-->
+        </div>
+        <button pButton pRipple label="Sign In" icon="pi pi-user" class="w-full" (click)="hideAuthDialog()"></button>
+      </div>
+    </p-dialog>
+
+
+    <button class="p-link layout-topbar-button" (click)="toggleSettingDialog()">
       <i class="pi pi-cog"></i>
       <span>Settings</span>
     </button>
 
+    <!--Settings Dialog-->
     <p-dialog
       header="Settings"
       [(visible)]="settingDialogVisible"
@@ -107,10 +144,8 @@
           class="flex-auto"
           placeholder='GPT-3.5 Turbo'/>
       </div>
-
-
       <div class="flex justify-content-end gap-2">
-<!--        <p-button label="Cancel" severity="secondary" (onClick)="hideSettingDialog()"/>-->
+        <!--        <p-button label="Cancel" severity="secondary" (onClick)="hideSettingDialog()"/>-->
         <p-button label="Save to LocalStorage" (onClick)="hideSettingDialog()"/>
       </div>
     </p-dialog>
