@@ -93,7 +93,7 @@
       <!--      <span class="p-text-secondary block mb-5">Update your information.</span>-->
       <div class="flex align-items-center gap-3 mb-3">
         <label for="token" class="font-semibold w-8rem">chatGPT Token</label>
-        <input pInputText id="token" class="flex-auto" autocomplete="off"/>
+        <input pInputText id="token" type="password" class="flex-auto" autocomplete="off" [(ngModel)]="token"/>
       </div>
 
       <div class="flex align-items-center gap-3 mb-3">
@@ -110,8 +110,8 @@
 
 
       <div class="flex justify-content-end gap-2">
-        <p-button label="Cancel" severity="secondary" (onClick)="hideSettingDialog()"/>
-        <p-button label="Save" (onClick)="hideSettingDialog()"/>
+<!--        <p-button label="Cancel" severity="secondary" (onClick)="hideSettingDialog()"/>-->
+        <p-button label="Save to LocalStorage" (onClick)="hideSettingDialog()"/>
       </div>
     </p-dialog>
 
