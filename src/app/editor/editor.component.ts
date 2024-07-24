@@ -1,18 +1,28 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {EditorModule} from 'primeng/editor';
 import {FormsModule} from '@angular/forms';
-import Quill from 'quill';
+import Quill, {Bounds} from 'quill';
 import {LayoutService} from "@src/app/layout/service/app.layout.service";
+import {OverlayPanel, OverlayPanelModule} from "primeng/overlaypanel";
+import {MenubarModule} from "primeng/menubar";
+import {MenuItem} from "primeng/api";
+import {Button} from "primeng/button";
+import {Ripple} from "primeng/ripple";
+import {NgClass, NgIf} from "@angular/common";
+import {InputTextModule} from "primeng/inputtext";
+import {SplitButtonModule} from "primeng/splitbutton";
 
 @Component({
   selector: 'app-editor',
   standalone: true,
-  imports: [FormsModule, EditorModule],
+  imports: [FormsModule, EditorModule, OverlayPanelModule, MenubarModule, Button, Ripple, NgClass, NgIf, InputTextModule, SplitButtonModule],
   templateUrl: './editor.component.html',
-  styleUrl: './editor.component.scss'
+  styleUrls: ['./editor.component.scss']
 })
 export class EditorComponent implements AfterViewInit, OnInit {
   @ViewChild('editor', {static: true}) editor!: ElementRef;
+  @ViewChild('op') overlayPanel!: OverlayPanel;
+
   toolbar!: ElementRef;
   quill!: Quill;
 
@@ -37,6 +47,7 @@ export class EditorComponent implements AfterViewInit, OnInit {
 <!--  <p class="ql-align-center"><span class="ql-formula" data-value="x^2 + (y - \\\\sqrt[3]{x^2})^2 = 1"></span></p>-->
 <!--  <p><br></p>-->
   `;
+
   // toolbarOptions = [
   //   // [{'bold': ['bold', 'italic', 'underline', 'strike']}],
   //   [
@@ -106,6 +117,29 @@ export class EditorComponent implements AfterViewInit, OnInit {
   //     'clean'
   //   ]                                         // remove formatting button
   // ];
+
+  toolbarItems: MenuItem[] = [
+    {label: 'Summarize'},
+    {label: 'Improve'},
+    {label: 'Simplify'},
+    {label: 'Expand'},
+    {
+      label: 'Change Tone',
+      items: [
+        {label: 'Professional'},
+        {label: 'Casual'},
+      ]
+    },
+    {
+      label: 'Change Style',
+      items: [
+        {label: 'Business'},
+        {label: 'Academic'},
+      ]
+    }
+  ];
+  private displayChatGPTDialog: boolean = false;
+
   constructor(private layoutService: LayoutService) {
   }
 
@@ -142,6 +176,45 @@ export class EditorComponent implements AfterViewInit, OnInit {
       '    0px 0px 2px rgba(0, 0, 0, 0.05),\n' +
       '    0px 1px 4px rgba(0, 0, 0, 0.08)';
     this.editor.nativeElement.querySelector('.ql-editor').innerHTML = `${this.text}`;
+
+    this.quill.on('selection-change', (range, oldRange, source) => {
+      if (range) {
+        if (range.length == 0) {
+          // console.log('User cursor is on', range.index);
+          this.overlayPanel.hide();
+        } else {
+          // const text = this.quill.getText(range.index, range.length);
+          // console.log('User has highlighted', text);
+
+          const bounds: Bounds = <Bounds>this.quill.getBounds(range.index, range.length);
+          const editorRect = this.editor.nativeElement.getBoundingClientRect();
+
+          const top = editorRect.top + window.scrollY + bounds.top;
+          const left = editorRect.left + window.scrollX + bounds.left;
+
+          // Create a fake event to pass the position to the OverlayPanel
+          const event = {
+            target: {
+              getBoundingClientRect: () => ({
+                top: top,
+                left: left,
+                bottom: top + bounds.height,
+                right: left + bounds.width,
+                height: bounds.height,
+                width: bounds.width
+              })
+            }
+          };
+          this.overlayPanel.show(event as unknown as MouseEvent);
+        }
+      } else {
+        // console.log('Cursor not in the editor');
+        // this.overlayPanel.hide();
+      }
+    });
   }
 
+  showChatGPTDialog() {
+    this.displayChatGPTDialog = true;
+  }
 }

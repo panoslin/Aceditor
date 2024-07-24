@@ -58,5 +58,13 @@
        class="p-editor-content"
        style="font-size: 16px; font-family: 'Times New Roman', serif; height: calc(100vh - 9rem); width: 100%;border: 2px;">
   </div>
-
+  <p-overlayPanel #op>
+    <p-splitButton
+      icon="pi pi-sparkles"
+      [model]="toolbarItems"
+      (onClick)="showChatGPTDialog()"
+      severity="help"
+      [style]="{height: '1.9rem',  'width': '4.5rem'}"
+    />
+  </p-overlayPanel>
 </div>
