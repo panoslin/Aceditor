@@ -40,22 +40,22 @@ export class MenuComponent {
   protected AISidebarVisible: boolean = false;
   selectedPrompt: string = '';
   prompts: MenuItem[] = [
-    {label: 'Summarize'},
-    {label: 'Improve'},
-    {label: 'Simplify'},
-    {label: 'Expand'},
+    {label: '📝 Summarize'},
+    {label: '✨ Improve'},
+    {label: '🔍 Simplify'},
+    {label: '🔧 Expand'},
     {
-      label: 'Change Tone',
+      label: '🎨 Change Tone',
       items: [
-        {label: 'Professional'},
-        {label: 'Casual'},
+        {label: '🏢 Professional'},
+        {label: '🏠 Casual'},
       ]
     },
     {
-      label: 'Change Style',
+      label: '🖋️ Change Style',
       items: [
-        {label: 'Business'},
-        {label: 'Academic'},
+        {label: '💼 Business'},
+        {label: '🎓 Academic'},
       ]
     }
   ];
