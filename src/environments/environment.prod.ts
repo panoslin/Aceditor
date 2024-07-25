@@ -1,3 +1,4 @@
 export const environment = {
-    production: true
+  production: true,
+  chatGptApiEndpoint: 'https://api.openai.com/v1/chat/completions'
 };
