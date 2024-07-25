@@ -119,9 +119,7 @@ export class EditorComponent implements AfterViewInit, OnInit {
     // ];
     toolbarItems!: MenuItem[];
 
-    private displayChatGPTDialog: boolean = false;
-
-    constructor(private layoutService: LayoutService) {
+    constructor(protected layoutService: LayoutService) {
         this.toolbarItems = this.layoutService.toolbarItems;
     }
 
@@ -194,9 +192,5 @@ export class EditorComponent implements AfterViewInit, OnInit {
                 // this.overlayPanel.hide();
             }
         });
-    }
-
-    showChatGPTDialog() {
-        this.displayChatGPTDialog = true;
     }
 }

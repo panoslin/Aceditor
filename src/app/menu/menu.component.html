@@ -68,6 +68,7 @@
     </div>
 
     <p-splitButton
+        (onClick)="layoutService.updateChatMsgDialogVisible(true);"
         [model]="prompts"
         [style]="{height: '1.9rem', 'margin-top': '-1.5px', 'width': '4.5rem', 'margin-right' : '1rem'}"
         icon="pi pi-sparkles"

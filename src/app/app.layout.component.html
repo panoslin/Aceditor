@@ -5,6 +5,20 @@
     </div>
     <div class="layout-main-container">
         <div class="layout-main">
+            <p-dialog
+                [modal]="true"
+                dismissableMask="true"
+                position="bottom"
+                [(visible)]="chatMsgDialogVisible"
+                [style]="{ width: '70rem', height: '12rem' }"
+                transitionOptions="500ms cubic-bezier(0, 0, 0.2, 1)"
+            >
+                <div class="flex align-items-center mb-3">
+                    <label class="font-semibold w-6rem">🤖ChatGPT</label>
+                    <input placeholder="Ask ChatGPT ..." pInputText id="username" class="flex-auto" autocomplete="off"/>
+                    <p-button icon="pi pi-send" (onClick)="sendChatMsgDialog()"/>
+                </div>
+            </p-dialog>
             <router-outlet></router-outlet>
         </div>
         <!--        <app-status></app-status>-->
@@ -13,6 +27,6 @@
     <div class="layout-mask"></div>
 
     <div class="card flex justify-content-center">
-        <p-toast [life]="10000" [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }" />
+        <p-toast [life]="10000" [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"/>
     </div>
 </div>

@@ -60,7 +60,7 @@
     </div>
     <p-overlayPanel #op>
         <p-splitButton
-            (onClick)="showChatGPTDialog()"
+            (onClick)="layoutService.updateChatMsgDialogVisible(true);"
             [model]="toolbarItems"
             [style]="{height: '1.9rem',  'width': '4.5rem'}"
             icon="pi pi-sparkles"

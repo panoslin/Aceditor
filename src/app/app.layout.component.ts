@@ -11,6 +11,9 @@ import {SidebarComponent} from "./sidebar/sidebar.component";
 import {StatusComponent} from "./status/status.component";
 import {ToastModule} from "primeng/toast";
 import {MessageService} from "primeng/api";
+import {DialogModule} from "primeng/dialog";
+import {Button} from "primeng/button";
+import {InputTextModule} from "primeng/inputtext";
 
 @Component({
     selector: 'app-layout',
@@ -24,6 +27,9 @@ import {MessageService} from "primeng/api";
         StatusComponent,
         AppConfigComponent,
         ToastModule,
+        DialogModule,
+        Button,
+        InputTextModule,
     ],
     providers: [MessageService]
 })
@@ -39,12 +45,19 @@ export class AppLayoutComponent implements OnDestroy {
 
     @ViewChild(MenuComponent) appTopbar!: MenuComponent;
 
+    chatMsgDialogVisible: boolean = false;
+
     constructor(
         public layoutService: LayoutService,
         public renderer: Renderer2,
         public router: Router,
         private messageService: MessageService,
     ) {
+
+        this.layoutService.chatMsgDialogVisibleObservable$.subscribe(status => {
+            this.chatMsgDialogVisible = status;
+        });
+
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
             if (!this.menuOutsideClickListener) {
                 this.menuOutsideClickListener = this.renderer.listen('document', 'click', event => {
@@ -152,5 +165,9 @@ export class AppLayoutComponent implements OnDestroy {
                 detail: detail,
             }
         );
+    }
+
+    sendChatMsgDialog() {
+        this.chatMsgDialogVisible = true;
     }
 }
