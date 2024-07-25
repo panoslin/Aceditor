@@ -12,6 +12,7 @@ import {LayoutService} from "../layout/service/app.layout.service";
 })
 export class StatusComponent {
     loading: boolean = false;
+
     constructor(public layoutService: LayoutService) {
     }
 

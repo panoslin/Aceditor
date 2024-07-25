@@ -14,129 +14,129 @@ import {FormsModule} from "@angular/forms";
 import {Ripple} from "primeng/ripple";
 
 @Component({
-  selector: 'app-menu',
-  templateUrl: './menu.component.html',
-  standalone: true,
-  imports: [RouterLink, NgClass, MenubarModule, DialogModule, ButtonModule, InputTextModule, SplitButtonModule, CheckboxModule, DropdownModule, FormsModule, Ripple],
+    selector: 'app-menu',
+    templateUrl: './menu.component.html',
+    standalone: true,
+    imports: [RouterLink, NgClass, MenubarModule, DialogModule, ButtonModule, InputTextModule, SplitButtonModule, CheckboxModule, DropdownModule, FormsModule, Ripple],
 })
 export class MenuComponent {
-  items!: MenuItem[];
+    items!: MenuItem[];
 
-  @ViewChild('menubutton') menuButton!: ElementRef;
+    @ViewChild('menubutton') menuButton!: ElementRef;
 
-  @ViewChild('topbarmenubutton') topbarMenuButton!: ElementRef;
+    @ViewChild('topbarmenubutton') topbarMenuButton!: ElementRef;
 
-  @ViewChild('topbarmenu') menu!: ElementRef;
+    @ViewChild('topbarmenu') menu!: ElementRef;
 
-  @ViewChild('toolbar', {static: true}) toolbar!: ElementRef;
+    @ViewChild('toolbar', {static: true}) toolbar!: ElementRef;
 
-  settingDialogVisible: boolean = false;
-  token: string = '';
-  selectedModel: { name: string, code: string } = {
-    name: 'GPT-3.5 Turbo',
-    code: 'gpt-3.5-turbo'
-  };
-  protected authDialogVisible: boolean = false;
-  protected AISidebarVisible: boolean = false;
-  selectedPrompt: string = '';
-  prompts: MenuItem[] = [
-    {label: '📝 Summarize'},
-    {label: '✨ Improve'},
-    {label: '🔍 Simplify'},
-    {label: '🔧 Expand'},
-    {
-      label: '🎨 Change Tone',
-      items: [
-        {label: '🏢 Professional'},
-        {label: '🏠 Casual'},
-      ]
-    },
-    {
-      label: '🖋️ Change Style',
-      items: [
-        {label: '💼 Business'},
-        {label: '🎓 Academic'},
-      ]
-    }
-  ];
-
-  toggleSettingDialog() {
-    this.settingDialogVisible = !this.settingDialogVisible;
-    this.hideAuthDialog();
-  }
-
-  hideSettingDialog() {
-    this.settingDialogVisible = false;
-    // save userSettings to local storage
-    localStorage.setItem('userSettings', JSON.stringify({
-      token: this.token,
-      model: this.selectedModel
-    }));
-
-  }
-
-  constructor(public layoutService: LayoutService) {
-    const userSettings = localStorage.getItem('userSettings');
-    if (userSettings !== null) {
-      const settings = JSON.parse(userSettings);
-      this.token = settings.token || this.token;
-      this.selectedModel = settings.model || this.selectedModel;
-    }
-
-    this.items = [
-      {
-        label: 'File',
-        icon: 'pi pi-file',
-        items: [
-          {
-            label: 'New',
-            icon: 'pi pi-file-plus'
-          },
-          {
-            label: 'Open',
-            icon: 'pi pi-folder-open'
-          },
-          {
-            label: 'Save',
-            icon: 'pi pi-save'
-          },
-        ]
-      },
-      {
-        label: 'Edit',
-        icon: 'pi pi-pencil',
-        items: [
-          {
-            label: 'Copy',
-            icon: 'pi pi-copy'
-          },
-          {
-            label: 'Cut',
-            icon: 'pi pi-clone'
-          },
-          {
-            label: 'Paste',
-            icon: 'pi pi-clipboard'
-          },
-        ]
-      },
+    settingDialogVisible: boolean = false;
+    token: string = '';
+    selectedModel: { name: string, code: string } = {
+        name: 'GPT-3.5 Turbo',
+        code: 'gpt-3.5-turbo'
+    };
+    selectedPrompt: string = '';
+    prompts: MenuItem[] = [
+        {label: '📝 Summarize'},
+        {label: '✨ Improve'},
+        {label: '🔍 Simplify'},
+        {label: '🔧 Expand'},
+        {
+            label: '🎨 Change Tone',
+            items: [
+                {label: '🏢 Professional'},
+                {label: '🏠 Casual'},
+            ]
+        },
+        {
+            label: '🖋️ Change Style',
+            items: [
+                {label: '💼 Business'},
+                {label: '🎓 Academic'},
+            ]
+        }
     ];
-  }
+    protected authDialogVisible: boolean = false;
+    protected AISidebarVisible: boolean = false;
 
-  ngOnInit(): void {
-    this.layoutService.setToolbarElementRef(this.toolbar);
-  }
+    constructor(public layoutService: LayoutService) {
+        const userSettings = localStorage.getItem('userSettings');
+        if (userSettings !== null) {
+            const settings = JSON.parse(userSettings);
+            this.token = settings.token || this.token;
+            this.selectedModel = settings.model || this.selectedModel;
+        }
 
-  toggleAuthDialog() {
-    this.authDialogVisible = !this.authDialogVisible;
-    this.hideSettingDialog()
-  }
+        this.items = [
+            {
+                label: 'File',
+                icon: 'pi pi-file',
+                items: [
+                    {
+                        label: 'New',
+                        icon: 'pi pi-file-plus'
+                    },
+                    {
+                        label: 'Open',
+                        icon: 'pi pi-folder-open'
+                    },
+                    {
+                        label: 'Save',
+                        icon: 'pi pi-save'
+                    },
+                ]
+            },
+            {
+                label: 'Edit',
+                icon: 'pi pi-pencil',
+                items: [
+                    {
+                        label: 'Copy',
+                        icon: 'pi pi-copy'
+                    },
+                    {
+                        label: 'Cut',
+                        icon: 'pi pi-clone'
+                    },
+                    {
+                        label: 'Paste',
+                        icon: 'pi pi-clipboard'
+                    },
+                ]
+            },
+        ];
+    }
 
-  protected hideAuthDialog() {
-    this.authDialogVisible = false;
-  }
+    toggleSettingDialog() {
+        this.settingDialogVisible = !this.settingDialogVisible;
+        this.hideAuthDialog();
+    }
 
-  toggleAISidebar() {
-    this.AISidebarVisible = !this.AISidebarVisible;
-  }
+    hideSettingDialog() {
+        this.settingDialogVisible = false;
+        // save userSettings to local storage
+        localStorage.setItem('userSettings', JSON.stringify({
+            token: this.token,
+            model: this.selectedModel
+        }));
+
+    }
+
+    ngOnInit(): void {
+        this.layoutService.setToolbarElementRef(this.toolbar);
+    }
+
+    toggleAuthDialog() {
+        this.authDialogVisible = !this.authDialogVisible;
+        this.hideSettingDialog()
+    }
+
+    toggleAISidebar() {
+        this.AISidebarVisible = !this.AISidebarVisible;
+    }
+
+    protected hideAuthDialog() {
+        this.authDialogVisible = false;
+    }
 }

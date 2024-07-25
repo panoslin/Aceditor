@@ -29,66 +29,66 @@ $gutter: 1rem; //for primeflex grid system
 @import url('https://fonts.googleapis.com/css2?family=Lucida+Sans:wght@400;700&display=swap');
 
 .ql-font-arial {
-  font-family: 'Arial', sans-serif;
+    font-family: 'Arial', sans-serif;
 }
 
 .ql-font-comic-sans {
-  font-family: 'Comic Sans MS', cursive;
+    font-family: 'Comic Sans MS', cursive;
 }
 
 .ql-font-courier-new {
-  font-family: 'Courier New', monospace;
+    font-family: 'Courier New', monospace;
 }
 
 .ql-font-georgia {
-  font-family: 'Georgia', serif;
+    font-family: 'Georgia', serif;
 }
 
 .ql-font-helvetica {
-  font-family: 'Helvetica', sans-serif;
+    font-family: 'Helvetica', sans-serif;
 }
 
 .ql-font-lucida {
-  font-family: 'Lucida Sans', sans-serif;
+    font-family: 'Lucida Sans', sans-serif;
 }
 
 .ql-font-times-new-roman {
-  font-family: 'Times New Roman', serif;
+    font-family: 'Times New Roman', serif;
 }
 
 /* Set dropdown font-families */
 .ql-font span[data-label='Arial']::before {
-  font-family: 'Arial', sans-serif;
+    font-family: 'Arial', sans-serif;
 }
 
 .ql-font span[data-label='Comic Sans']::before {
-  font-family: 'Comic Sans MS', cursive;
+    font-family: 'Comic Sans MS', cursive;
 }
 
 .ql-font span[data-label='Courier New']::before {
-  font-family: 'Courier New', monospace;
+    font-family: 'Courier New', monospace;
 }
 
 .ql-font span[data-label='Georgia']::before {
-  font-family: 'Georgia', serif;
+    font-family: 'Georgia', serif;
 }
 
 .ql-font span[data-label='Helvetica']::before {
-  font-family: 'Helvetica', sans-serif;
+    font-family: 'Helvetica', sans-serif;
 }
 
 .ql-font span[data-label='Lucida']::before {
-  font-family: 'Lucida Sans', sans-serif;
+    font-family: 'Lucida Sans', sans-serif;
 }
 
 .ql-font span[data-label='Times New Roman']::before {
-  font-family: 'Times New Roman', serif;
+    font-family: 'Times New Roman', serif;
 }
 
 .p-overlaypanel .p-overlaypanel-content {
-  padding: 0.25rem;
+    padding: 0.25rem;
 }
 
 .p-tieredmenu.p-tieredmenu-overlay {
-  font-family: 'Comic Sans MS', cursive;
+    font-family: 'Comic Sans MS', cursive;
 }

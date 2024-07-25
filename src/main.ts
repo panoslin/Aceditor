@@ -8,21 +8,21 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {environment} from './environments/environment';
 
 if (environment.production) {
-  enableProdMode();
+    enableProdMode();
 }
 
 bootstrapApplication(AppComponent, {
-  providers: [
-    provideRouter(
-      routes,
-      withEnabledBlockingInitialNavigation(),
-      withInMemoryScrolling({
-        scrollPositionRestoration: 'enabled',
-        anchorScrolling: 'enabled',
-        // onSameUrlNavigation: 'reload'
-      })
-    ),
-    importProvidersFrom(BrowserAnimationsModule), // Add BrowserAnimationsModule if you use animations
-    importProvidersFrom(HttpClientModule) // Add HttpClientModule here
-  ],
+    providers: [
+        provideRouter(
+            routes,
+            withEnabledBlockingInitialNavigation(),
+            withInMemoryScrolling({
+                scrollPositionRestoration: 'enabled',
+                anchorScrolling: 'enabled',
+                // onSameUrlNavigation: 'reload'
+            })
+        ),
+        importProvidersFrom(BrowserAnimationsModule), // Add BrowserAnimationsModule if you use animations
+        importProvidersFrom(HttpClientModule) // Add HttpClientModule here
+    ],
 }).catch((err) => console.error(err));

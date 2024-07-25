@@ -13,7 +13,7 @@ import {SidebarItem} from "@src/app/sidebar/sidebar.item";
     selector: 'app-sidebar',
     templateUrl: './sidebar.component.html',
     standalone: true,
-  imports: [NgFor, NgIf, PanelMenuModule, BadgeModule, Ripple, SidebarItem]
+    imports: [NgFor, NgIf, PanelMenuModule, BadgeModule, Ripple, SidebarItem]
 })
 export class SidebarComponent implements OnInit {
 
