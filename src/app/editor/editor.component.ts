@@ -117,30 +117,12 @@ export class EditorComponent implements AfterViewInit, OnInit {
     //     'clean'
     //   ]                                         // remove formatting button
     // ];
+    toolbarItems!: MenuItem[];
 
-    toolbarItems: MenuItem[] = [
-        {label: '📝 Summarize'},
-        {label: '✨ Improve'},
-        {label: '🔍 Simplify'},
-        {label: '🔧 Expand'},
-        {
-            label: '🎨 Change Tone',
-            items: [
-                {label: '🏢 Professional'},
-                {label: '🏠 Casual'},
-            ]
-        },
-        {
-            label: '🖋️ Change Style',
-            items: [
-                {label: '💼 Business'},
-                {label: '🎓 Academic'},
-            ]
-        }
-    ];
     private displayChatGPTDialog: boolean = false;
 
     constructor(private layoutService: LayoutService) {
+        this.toolbarItems = this.layoutService.toolbarItems;
     }
 
     ngOnInit(): void {

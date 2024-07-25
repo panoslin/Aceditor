@@ -2,6 +2,7 @@ import {effect, ElementRef, Injectable, signal} from '@angular/core';
 import {catchError, map, Observable, of, Subject} from 'rxjs';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "@src/environments/environment";
+import {MenuItem} from "primeng/api";
 
 export interface AppConfig {
     inputStyle: string;
@@ -57,6 +58,26 @@ export class LayoutService {
     private sendMessageParamsSubject = new Subject<SendMessageParams>();
     sendMessageParams$ = this.sendMessageParamsSubject.asObservable();
 
+    toolbarItems: MenuItem[] = [
+        {label: '📝 Summarize'},
+        {label: '✨ Improve'},
+        {label: '🔍 Simplify'},
+        {label: '🔧 Expand'},
+        {
+            label: '🎨 Change Tone',
+            items: [
+                {label: '🏢 Professional'},
+                {label: '🏠 Casual'},
+            ]
+        },
+        {
+            label: '🖋️ Change Style',
+            items: [
+                {label: '💼 Business'},
+                {label: '🎓 Academic'},
+            ]
+        }
+    ];
 
     constructor(
         private http: HttpClient,

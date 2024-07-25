@@ -20,7 +20,6 @@ import {Ripple} from "primeng/ripple";
     imports: [RouterLink, NgClass, MenubarModule, DialogModule, ButtonModule, InputTextModule, SplitButtonModule, CheckboxModule, DropdownModule, FormsModule, Ripple],
 })
 export class MenuComponent {
-    items!: MenuItem[];
 
     @ViewChild('menubutton') menuButton!: ElementRef;
 
@@ -37,26 +36,7 @@ export class MenuComponent {
         code: 'gpt-3.5-turbo'
     };
     selectedPrompt: string = '';
-    prompts: MenuItem[] = [
-        {label: '📝 Summarize'},
-        {label: '✨ Improve'},
-        {label: '🔍 Simplify'},
-        {label: '🔧 Expand'},
-        {
-            label: '🎨 Change Tone',
-            items: [
-                {label: '🏢 Professional'},
-                {label: '🏠 Casual'},
-            ]
-        },
-        {
-            label: '🖋️ Change Style',
-            items: [
-                {label: '💼 Business'},
-                {label: '🎓 Academic'},
-            ]
-        }
-    ];
+    prompts!: MenuItem[];
     protected authDialogVisible: boolean = false;
     protected AISidebarVisible: boolean = false;
 
@@ -67,45 +47,7 @@ export class MenuComponent {
             this.token = settings.token || this.token;
             this.selectedModel = settings.model || this.selectedModel;
         }
-
-        this.items = [
-            {
-                label: 'File',
-                icon: 'pi pi-file',
-                items: [
-                    {
-                        label: 'New',
-                        icon: 'pi pi-file-plus'
-                    },
-                    {
-                        label: 'Open',
-                        icon: 'pi pi-folder-open'
-                    },
-                    {
-                        label: 'Save',
-                        icon: 'pi pi-save'
-                    },
-                ]
-            },
-            {
-                label: 'Edit',
-                icon: 'pi pi-pencil',
-                items: [
-                    {
-                        label: 'Copy',
-                        icon: 'pi pi-copy'
-                    },
-                    {
-                        label: 'Cut',
-                        icon: 'pi pi-clone'
-                    },
-                    {
-                        label: 'Paste',
-                        icon: 'pi pi-clipboard'
-                    },
-                ]
-            },
-        ];
+        this.prompts = this.layoutService.toolbarItems;
     }
 
     toggleSettingDialog() {
