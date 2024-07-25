@@ -9,6 +9,8 @@ import {AppConfigComponent} from './layout/config/app.config.component';
 import {MenuComponent} from "./menu/menu.component";
 import {SidebarComponent} from "./sidebar/sidebar.component";
 import {StatusComponent} from "./status/status.component";
+import {ToastModule} from "primeng/toast";
+import {MessageService} from "primeng/api";
 
 @Component({
     selector: 'app-layout',
@@ -20,8 +22,10 @@ import {StatusComponent} from "./status/status.component";
         SidebarComponent,
         RouterOutlet,
         StatusComponent,
-        AppConfigComponent
-    ]
+        AppConfigComponent,
+        ToastModule,
+    ],
+    providers: [MessageService]
 })
 export class AppLayoutComponent implements OnDestroy {
 
@@ -35,7 +39,12 @@ export class AppLayoutComponent implements OnDestroy {
 
     @ViewChild(MenuComponent) appTopbar!: MenuComponent;
 
-    constructor(public layoutService: LayoutService, public renderer: Renderer2, public router: Router) {
+    constructor(
+        public layoutService: LayoutService,
+        public renderer: Renderer2,
+        public router: Router,
+        private messageService: MessageService,
+    ) {
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
             if (!this.menuOutsideClickListener) {
                 this.menuOutsideClickListener = this.renderer.listen('document', 'click', event => {
@@ -69,6 +78,10 @@ export class AppLayoutComponent implements OnDestroy {
                 this.hideMenu();
                 this.hideProfileMenu();
             });
+
+        this.layoutService.sendMessageParams$.subscribe(params => {
+            this.showMessage(params.severity, params.summary, params.detail);
+        });
     }
 
     get containerClass() {
@@ -129,5 +142,15 @@ export class AppLayoutComponent implements OnDestroy {
         if (this.menuOutsideClickListener) {
             this.menuOutsideClickListener();
         }
+    }
+
+    showMessage(severity: string, summary: string, detail: string) {
+        this.messageService.add(
+            {
+                severity: severity,
+                summary: summary,
+                detail: detail,
+            }
+        );
     }
 }

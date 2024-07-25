@@ -21,6 +21,12 @@ interface LayoutState {
     menuHoverActive: boolean;
 }
 
+export interface SendMessageParams {
+    severity: string;
+    summary: string;
+    detail: string
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -47,6 +53,10 @@ export class LayoutService {
     configUpdate$ = this.configUpdate.asObservable();
     private overlayOpen = new Subject<any>();
     overlayOpen$ = this.overlayOpen.asObservable();
+
+    private sendMessageParamsSubject = new Subject<SendMessageParams>();
+    sendMessageParams$ = this.sendMessageParamsSubject.asObservable();
+
 
     constructor(
         private http: HttpClient,
@@ -193,20 +203,28 @@ export class LayoutService {
             map(response => {
                 const completion = response;
                 if (completion.choices[0].finish_reason === 'length') {
-                    // TODO: TOAST ERROR MSG
-                    console.log('Completion finished with incomplete output, please try again with more context');
-                    console.log(completion.choices[0].message.content);
+                    this.sendMessage({
+                        severity: 'error',
+                        summary: 'chatGPT API Error',
+                        detail: `Completion finished with incomplete output, please try again with more context ${completion.choices[0].message.content}`
+                    })
                     return [];
                 }
 
                 return JSON.parse(completion.choices[0].message.content).suggestions || [];
             }),
             catchError(error => {
-                // TODO: TOAST ERROR MSG
-                console.error(`An error occurred: ${error}`);
-                console.trace(error);
+                this.sendMessage({
+                    severity: 'error',
+                    summary: 'chatGPT API Error',
+                    detail: error
+                })
                 return of([]);
             })
         );
+    }
+
+    sendMessage(params: SendMessageParams) {
+        this.sendMessageParamsSubject.next(params);
     }
 }
