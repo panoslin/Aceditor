@@ -26,13 +26,11 @@ export class EditorComponent implements AfterViewInit, OnInit {
     toolbar!: ElementRef;
     quill!: Quill;
 
-    text: string = `
-  <h1 class="ql-align-center">Quill Rich Text Editor</h1>
+    placeholder: string = `<h1 class="ql-align-center">Quill Rich Text Editor</h1>
   <p>Quill is a free, <a href="https://github.com/slab/quill/">open source</a> WYSIWYG editor built for the modern web. With its <a href="https://quilljs.com/docs/modules/">modular architecture</a> and expressive <a href="https://quilljs.com/docs/api">API</a>, it is completely customizable to fit any need.</p>
 <!--  <h2 class="ql-align-center">Getting Started is Easy</h2>-->
 <!--  <pre data-language="javascript" class="ql-syntax" spellcheck="false"><span class="hljs-comment">// &lt;link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet"&gt;</span>-->
 <!--    <span class="hljs-comment">// &lt;script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"&gt;&lt;/script&gt;</span>-->
-
 <!--    <span class="hljs-keyword">const</span> quill = <span class="hljs-keyword">new</span> Quill(<span class="hljs-string">'#editor'</span>,-->
 <!--    {-->
 <!--      modules: {-->
@@ -40,7 +38,6 @@ export class EditorComponent implements AfterViewInit, OnInit {
 <!--      },-->
 <!--      theme: <span class="hljs-string">'snow'</span>-->
 <!--    });-->
-
 <!--    <span class="hljs-comment">// Open your browser's developer console to try out the API!</span>-->
 <!--  </pre>-->
 <!--  <p class="ql-align-center"><strong>Built with</strong></p>-->
@@ -118,6 +115,8 @@ export class EditorComponent implements AfterViewInit, OnInit {
     //   ]                                         // remove formatting button
     // ];
     toolbarItems!: MenuItem[];
+    private savedRange!: any;
+    private editorHasFocus: boolean = true;
 
     constructor(protected layoutService: LayoutService) {
         this.toolbarItems = this.layoutService.toolbarItems;
@@ -155,16 +154,29 @@ export class EditorComponent implements AfterViewInit, OnInit {
         this.editor.nativeElement.querySelector('.ql-editor').style.boxShadow = '0px 3px 5px rgba(0, 0, 0, 0.02),\n' +
             '    0px 0px 2px rgba(0, 0, 0, 0.05),\n' +
             '    0px 1px 4px rgba(0, 0, 0, 0.08)';
-        this.editor.nativeElement.querySelector('.ql-editor').innerHTML = `${this.text}`;
+        this.editor.nativeElement.querySelector('.ql-editor').innerHTML = `${this.placeholder}`;
 
+        this.quill.focus();
         this.quill.on('selection-change', (range, oldRange, source) => {
             if (range) {
                 if (range.length == 0) {
+                    if (!this.editorHasFocus) {
+                        this.quill.setSelection(this.savedRange);
+                        this.editorHasFocus = true;
+                        return;
+                    }
                     // console.log('User cursor is on', range.index);
                     this.overlayPanel.hide();
+                    this.savedRange = this.quill.getSelection(false);
                 } else {
-                    // const text = this.quill.getText(range.index, range.length);
-                    // console.log('User has highlighted', text);
+                    if (!this.editorHasFocus) {
+                        this.quill.setSelection(this.savedRange);
+                        this.editorHasFocus = true;
+                        return;
+                    }
+                    this.savedRange = this.quill.getSelection(false);
+                    const text = this.quill.getText(range.index, range.length);
+                    console.log('User has highlighted', text);
 
                     const bounds: Bounds = <Bounds>this.quill.getBounds(range.index, range.length);
                     const editorRect = this.editor.nativeElement.getBoundingClientRect();
@@ -188,8 +200,9 @@ export class EditorComponent implements AfterViewInit, OnInit {
                     this.overlayPanel.show(event as unknown as MouseEvent);
                 }
             } else {
+                this.editorHasFocus = false;
                 // console.log('Cursor not in the editor');
-                // this.overlayPanel.hide();
+                this.overlayPanel.hide();
             }
         });
     }
