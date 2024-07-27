@@ -1,6 +1,6 @@
 import {Component, OnDestroy, Renderer2, ViewChild} from '@angular/core';
 import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
-import {NgClass} from '@angular/common';
+import {NgClass, NgIf} from '@angular/common';
 
 import {filter, Subscription} from 'rxjs';
 
@@ -14,6 +14,8 @@ import {MessageService} from "primeng/api";
 import {DialogModule} from "primeng/dialog";
 import {Button} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
+import {FormsModule} from "@angular/forms";
+import {InputTextareaModule} from "primeng/inputtextarea";
 
 @Component({
     selector: 'app-layout',
@@ -30,6 +32,9 @@ import {InputTextModule} from "primeng/inputtext";
         DialogModule,
         Button,
         InputTextModule,
+        FormsModule,
+        InputTextareaModule,
+        NgIf,
     ],
     providers: [MessageService]
 })
@@ -46,6 +51,8 @@ export class AppLayoutComponent implements OnDestroy {
     @ViewChild(MenuComponent) appTopbar!: MenuComponent;
 
     chatMsgDialogVisible: boolean = false;
+    chatDialogVisible: boolean = false;
+    chatResponseMsg: string = '';
 
     constructor(
         public layoutService: LayoutService,
@@ -56,6 +63,9 @@ export class AppLayoutComponent implements OnDestroy {
 
         this.layoutService.chatMsgDialogVisibleObservable$.subscribe(status => {
             this.chatMsgDialogVisible = status;
+            if (status) {
+                this.chatDialogVisible = false;
+            }
         });
 
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
@@ -168,6 +178,7 @@ export class AppLayoutComponent implements OnDestroy {
     }
 
     sendChatMsgDialog() {
-        this.chatMsgDialogVisible = true;
+        // this.chatMsgDialogVisible = true;
+        this.chatDialogVisible = true;
     }
 }
