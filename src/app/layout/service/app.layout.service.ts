@@ -3,6 +3,7 @@ import {BehaviorSubject, catchError, map, Observable, of, Subject} from 'rxjs';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "@src/environments/environment";
 import {MenuItem} from "primeng/api";
+import OpenAI from 'openai';
 
 export interface AppConfig {
     inputStyle: string;
@@ -25,13 +26,14 @@ interface LayoutState {
 export interface SendMessageParams {
     severity: string;
     summary: string;
-    detail: string
+    detail: any
 }
 
 @Injectable({
     providedIn: 'root',
 })
 export class LayoutService {
+    private openai!: OpenAI;
     _config: AppConfig = {
         ripple: false,
         inputStyle: 'outlined',
@@ -201,6 +203,40 @@ export class LayoutService {
 
     changeScale(value: number) {
         document.documentElement.style.fontSize = `${value}px`;
+    }
+
+    // async ngOnInit(): Promise<void> {
+    //     for await (const content of this.LayoutService.getChatCompletionGenerator()) {
+    //         console.log(content);
+    //         // You can also update the component's state or do other processing with the yielded content here
+    //     }
+    // }
+    async* getChatCompletionGenerator(
+        apiToken: string,
+        messages: any,
+        model: string
+    ): AsyncIterableIterator<string> {
+        try {
+            this.openai = new OpenAI({
+                apiKey: apiToken
+            });
+            const stream = await this.openai.chat.completions.create({
+                model: model,
+                messages: messages,
+                stream: true,
+            });
+
+            for await (const chunk of stream) {
+                yield chunk.choices[0]?.delta?.content || '';
+            }
+        } catch (error) {
+            this.sendMessage({
+                severity: 'error',
+                summary: 'chatGPT API Error',
+                detail: error
+            })
+            console.error('Error fetching chat completion:', error);
+        }
     }
 
     fetchSuggestion(apiToken: string, userPrompt: string, systemPrompt: string, model: string): Observable<any> {
