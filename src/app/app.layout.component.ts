@@ -1,4 +1,4 @@
-import {Component, OnDestroy, Renderer2, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnDestroy, Renderer2, ViewChild} from '@angular/core';
 import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
 import {NgClass, NgIf} from '@angular/common';
 
@@ -16,6 +16,8 @@ import {Button} from "primeng/button";
 import {InputTextModule} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
 import {InputTextareaModule} from "primeng/inputtextarea";
+
+// import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
     selector: 'app-layout',
@@ -36,7 +38,8 @@ import {InputTextareaModule} from "primeng/inputtextarea";
         InputTextareaModule,
         NgIf,
     ],
-    providers: [MessageService]
+    providers: [MessageService],
+    styleUrls: ['./app.layout.component.scss']
 })
 export class AppLayoutComponent implements OnDestroy {
 
@@ -50,16 +53,25 @@ export class AppLayoutComponent implements OnDestroy {
 
     @ViewChild(MenuComponent) appTopbar!: MenuComponent;
 
+    @ViewChild('chatDialog', {static: true}) chatDialog!: ElementRef;
+
     chatMsgDialogVisible: boolean = false;
     chatDialogVisible: boolean = false;
-    chatResponseMsg: string = '';
+    editorSelectedText: string = '';
+    question: string = '';
 
     constructor(
         public layoutService: LayoutService,
         public renderer: Renderer2,
         public router: Router,
         private messageService: MessageService,
+        private cdr: ChangeDetectorRef,
+        // private sanitizer: DomSanitizer
     ) {
+
+        this.layoutService.editorSelectedTextSubject$.subscribe(text => {
+            this.editorSelectedText = text;
+        });
 
         this.layoutService.chatMsgDialogVisibleObservable$.subscribe(status => {
             this.chatMsgDialogVisible = status;
@@ -177,8 +189,98 @@ export class AppLayoutComponent implements OnDestroy {
         );
     }
 
-    sendChatMsgDialog() {
-        // this.chatMsgDialogVisible = true;
+    message = [
+        {
+            role: 'system',
+            content: 'Answer the question based on the context below. ' +
+                'The response should be in HTML format. ' +
+                'The response should preserve any HTML formatting, links, and styles in the context.'
+        },
+    ];
+
+    async sendChatMsgDialog() {
         this.chatDialogVisible = true;
+        this.cdr.detectChanges();
+        // get highlighted text from editor
+        const text = this.editorSelectedText;
+        const userSettings = localStorage.getItem('userSettings');
+        if (userSettings) {
+            const settings = JSON.parse(userSettings);
+            const token = settings.token;
+            const selectedModel = settings.model.code;
+
+            if (!this.chatDialog) {
+                this.chatDialog = new ElementRef(this.renderer.selectRootElement('#chatDialog', true));
+            }
+
+            // create a new div under this.chatDialog: ElementRef with class .chat-dialog
+            let questionDiv = this.renderer.createElement('div');
+            this.renderer.addClass(questionDiv, 'chat-dialog');
+            this.renderer.addClass(questionDiv, 'mb-4');
+            this.renderer.setProperty(questionDiv, 'style', 'float: right;background-color: yellowgreen');
+            this.renderer.appendChild(this.chatDialog.nativeElement, questionDiv);
+            questionDiv.innerHTML = this.question;
+
+            // construct message
+            if (this.message.length === 1) {
+                this.message.push(
+                    {
+                        role: 'user',
+                        content: `Question: ${this.question}\n\n\nContext: ${text}`
+                    }
+                );
+            } else {
+                this.message.push(
+                    {
+                        role: 'user',
+                        content: `Question: ${this.question}`
+                    }
+                );
+
+            }
+            this.question = '';
+
+            // send query to chatgpt
+            let contents = '';
+            let answerDiv;
+            for await (const content of this.layoutService.getChatCompletionGenerator(token, this.message, selectedModel)) {
+                if (!answerDiv) {
+                    answerDiv = this.renderer.createElement('div');
+                    this.renderer.addClass(answerDiv, 'chat-dialog');
+                    this.renderer.addClass(answerDiv, 'mb-4');
+                    this.renderer.setProperty(answerDiv, 'style', 'float: left; width: 100%; ');
+                    this.renderer.appendChild(this.chatDialog.nativeElement, answerDiv);
+                }
+                contents += content
+                // const safeContents = this.sanitizer.bypassSecurityTrustHtml(contents);
+                this.renderer.setProperty(answerDiv, 'innerHTML', contents);
+                this.chatDialog.nativeElement.scrollTop = this.chatDialog.nativeElement.scrollHeight;
+            }
+            this.message.push(
+                {
+                    role: 'assistant',
+                    content: answerDiv.innerHTML
+                }
+            )
+        } else {
+            this.layoutService.sendMessage({
+                severity: 'error',
+                summary: 'No user settings',
+                detail: 'Please configure user settings from the upper right gear icon'
+            })
+            return;
+        }
+
+    }
+
+    hidechatMsgDialog() {
+        this.message = [
+            {
+                role: 'system',
+                content: 'Answer the question based on the context below. ' +
+                    'The response should be in HTML format. ' +
+                    'The response should preserve any HTML formatting, links, and styles in the context.'
+            },
+        ]
     }
 }

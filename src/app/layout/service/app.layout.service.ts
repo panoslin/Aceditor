@@ -63,6 +63,13 @@ export class LayoutService {
     private chatMsgDialogVisible = new BehaviorSubject<boolean>(false);
     chatMsgDialogVisibleObservable$ = this.chatMsgDialogVisible.asObservable();
 
+    private editorSelectedText = new BehaviorSubject<string>('');
+    editorSelectedTextSubject$ = this.editorSelectedText.asObservable();
+
+    updateEditorSelectedText(text: string) {
+        this.editorSelectedText.next(text);
+    }
+
     updateChatMsgDialogVisible(newStatus: boolean) {
         this.chatMsgDialogVisible.next(newStatus);
     }
@@ -218,7 +225,8 @@ export class LayoutService {
     ): AsyncIterableIterator<string> {
         try {
             this.openai = new OpenAI({
-                apiKey: apiToken
+                apiKey: apiToken,
+                dangerouslyAllowBrowser: true,
             });
             const stream = await this.openai.chat.completions.create({
                 model: model,

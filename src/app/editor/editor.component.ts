@@ -168,6 +168,7 @@ export class EditorComponent implements AfterViewInit, OnInit {
                     // console.log('User cursor is on', range.index);
                     this.overlayPanel.hide();
                     this.savedRange = this.quill.getSelection(false);
+                    this.layoutService.updateEditorSelectedText('');
                 } else {
                     if (!this.editorHasFocus) {
                         this.quill.setSelection(this.savedRange);
@@ -176,7 +177,7 @@ export class EditorComponent implements AfterViewInit, OnInit {
                     }
                     this.savedRange = this.quill.getSelection(false);
                     const text = this.quill.getText(range.index, range.length);
-                    console.log('User has highlighted', text);
+                    this.layoutService.updateEditorSelectedText(text);
 
                     const bounds: Bounds = <Bounds>this.quill.getBounds(range.index, range.length);
                     const editorRect = this.editor.nativeElement.getBoundingClientRect();
@@ -200,8 +201,8 @@ export class EditorComponent implements AfterViewInit, OnInit {
                     this.overlayPanel.show(event as unknown as MouseEvent);
                 }
             } else {
-                this.editorHasFocus = false;
                 // console.log('Cursor not in the editor');
+                this.editorHasFocus = false;
                 this.overlayPanel.hide();
             }
         });
