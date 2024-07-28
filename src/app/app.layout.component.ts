@@ -53,7 +53,7 @@ export class AppLayoutComponent implements OnDestroy {
 
     @ViewChild(MenuComponent) appTopbar!: MenuComponent;
 
-    @ViewChild('chatDialog', {static: true}) chatDialog!: ElementRef;
+    @ViewChild('chatDialog', {static: true}) chatDialog?: ElementRef;
 
     chatMsgDialogVisible: boolean = false;
     chatDialogVisible: boolean = false;
@@ -197,8 +197,12 @@ export class AppLayoutComponent implements OnDestroy {
                 'The response should preserve any HTML formatting, links, and styles in the context.'
         },
     ];
+    sendChatMsgButtonIcon: string = 'pi pi-send';
+    sendChatMsgButtonSeverity: any = null;
 
     async sendChatMsgDialog() {
+        this.sendChatMsgButtonIcon = 'pi pi-spinner-dotted pi-spin';
+        this.sendChatMsgButtonSeverity = "danger"
         this.chatDialogVisible = true;
         this.cdr.detectChanges();
         // get highlighted text from editor
@@ -250,6 +254,8 @@ export class AppLayoutComponent implements OnDestroy {
                     this.renderer.addClass(answerDiv, 'mb-4');
                     this.renderer.setProperty(answerDiv, 'style', 'float: left; width: 100%; ');
                     this.renderer.appendChild(this.chatDialog.nativeElement, answerDiv);
+                    this.sendChatMsgButtonIcon = 'pi pi-send';
+                    this.sendChatMsgButtonSeverity = null;
                 }
                 contents += content
                 // const safeContents = this.sanitizer.bypassSecurityTrustHtml(contents);
@@ -282,5 +288,6 @@ export class AppLayoutComponent implements OnDestroy {
                     'The response should preserve any HTML formatting, links, and styles in the context.'
             },
         ]
+        this.chatDialog = undefined;
     }
 }

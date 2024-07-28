@@ -16,8 +16,8 @@
                 [style]="{ width: '70rem' }"
                 transitionOptions="250ms cubic-bezier(0, 0, 0.2, 1)"
             >
-                <div *ngIf="chatDialogVisible" style="height: 90%">
-                    <div #chatDialog id="chatDialog" class="mb-3" style="height:60vh; overflow-y: auto">
+                <div *ngIf="chatDialogVisible" style="height: 40rem">
+                    <div #chatDialog id="chatDialog" class="mb-3" style="height:90%; overflow-y: auto">
                         <!--Chat messages will be appended here-->
                     </div>
                     <div class="flex align-items-center gap-3 mb-3">
@@ -27,9 +27,17 @@
                         <p-button icon="pi pi-refresh"></p-button>
                     </div>
                 </div>
-                <div class="flex align-items-center gap-3 mb-3">
-                    <input placeholder="Ask 🤖ChatGPT" style="font-size: 18px" pInputText [(ngModel)]="question" class="flex-auto" autocomplete="off"/>
-                    <p-button icon="pi pi-send" (onClick)="sendChatMsgDialog()"/>
+                <div class="flex align-items-center gap-3 mb-3" style="margin-top: 1rem">
+                    <input
+                        placeholder="Ask 🤖ChatGPT"
+                        style="font-size: 16px; font-family: ui-sans-serif, -apple-system, system-ui, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica, Apple Color Emoji, Arial, Segoe UI Emoji, Segoe UI Symbol;"
+                        pInputText
+                        [(ngModel)]="question"
+                        class="flex-auto"
+                        autocomplete="off"
+                        (keydown.enter)="sendChatMsgDialog()"
+                    />
+                    <p-button [severity]="sendChatMsgButtonSeverity" [icon]="sendChatMsgButtonIcon" (onClick)="sendChatMsgDialog()"/>
                 </div>
             </p-dialog>
             <router-outlet></router-outlet>
