@@ -206,7 +206,6 @@ export class AppLayoutComponent implements OnDestroy {
         this.chatDialogVisible = true;
         this.cdr.detectChanges();
         // get highlighted text from editor
-        const text = this.editorSelectedText;
         const userSettings = localStorage.getItem('userSettings');
         if (userSettings) {
             const settings = JSON.parse(userSettings);
@@ -226,11 +225,11 @@ export class AppLayoutComponent implements OnDestroy {
             questionDiv.innerHTML = this.question;
 
             // construct message
-            if (this.message.length === 1) {
+            if (this.message.length === 1 && this.editorSelectedText) {
                 this.message.push(
                     {
                         role: 'user',
-                        content: `Question: ${this.question}\n\n\nContext: ${text}`
+                        content: `Question: ${this.question}\n\n\nContext: ${this.editorSelectedText}`
                     }
                 );
             } else {
