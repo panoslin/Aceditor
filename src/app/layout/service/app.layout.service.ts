@@ -64,7 +64,7 @@ export class LayoutService {
     chatMsgDialogVisibleObservable$ = this.chatMsgDialogVisible.asObservable();
 
     private editorSelectedText = new BehaviorSubject<string>('');
-    editorSelectedTextSubject$ = this.editorSelectedText.asObservable();
+    editorSelectedTextObservable$ = this.editorSelectedText.asObservable();
 
     updateEditorSelectedText(text: string) {
         this.editorSelectedText.next(text);
@@ -298,5 +298,12 @@ export class LayoutService {
 
     sendMessage(params: SendMessageParams) {
         this.sendMessageParamsSubject.next(params);
+    }
+
+    private generatedTextSubject = new BehaviorSubject<string>('');
+    generatedTextObservable$ = this.generatedTextSubject.asObservable();
+
+    updateSelectionText(text: string) {
+        this.generatedTextSubject.next(text);
     }
 }

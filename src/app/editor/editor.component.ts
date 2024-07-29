@@ -120,6 +120,14 @@ export class EditorComponent implements AfterViewInit, OnInit {
 
     constructor(protected layoutService: LayoutService) {
         this.toolbarItems = this.layoutService.toolbarItems;
+        this.layoutService.generatedTextObservable$.subscribe(text => {
+            if (!this.savedRange) return;
+            if (this.savedRange.length > 0) {
+                // replace selection
+                this.quill.deleteText(this.savedRange.index, this.savedRange.length);
+            }
+            this.quill.clipboard.dangerouslyPasteHTML(this.savedRange.index, text)
+        });
     }
 
     ngOnInit(): void {
@@ -160,12 +168,12 @@ export class EditorComponent implements AfterViewInit, OnInit {
         this.quill.on('selection-change', (range, oldRange, source) => {
             if (range) {
                 if (range.length == 0) {
+                    // console.log('User cursor is on', range.index);
                     if (!this.editorHasFocus) {
                         this.quill.setSelection(this.savedRange);
                         this.editorHasFocus = true;
                         return;
                     }
-                    // console.log('User cursor is on', range.index);
                     this.overlayPanel.hide();
                     this.savedRange = this.quill.getSelection(false);
                     this.layoutService.updateEditorSelectedText('');
@@ -176,8 +184,7 @@ export class EditorComponent implements AfterViewInit, OnInit {
                         return;
                     }
                     this.savedRange = this.quill.getSelection(false);
-                    const text = this.quill.getText(range.index, range.length);
-                    this.layoutService.updateEditorSelectedText(text);
+                    this.layoutService.updateEditorSelectedText(this.quill.getText(range.index, range.length));
 
                     const bounds: Bounds = <Bounds>this.quill.getBounds(range.index, range.length);
                     const editorRect = this.editor.nativeElement.getBoundingClientRect();

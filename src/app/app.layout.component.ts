@@ -69,7 +69,7 @@ export class AppLayoutComponent implements OnDestroy {
         // private sanitizer: DomSanitizer
     ) {
 
-        this.layoutService.editorSelectedTextSubject$.subscribe(text => {
+        this.layoutService.editorSelectedTextObservable$.subscribe(text => {
             this.editorSelectedText = text;
         });
 
@@ -199,6 +199,7 @@ export class AppLayoutComponent implements OnDestroy {
     ];
     sendChatMsgButtonIcon: string = 'pi pi-send';
     sendChatMsgButtonSeverity: any = null;
+    generatedResponse: string = '';
 
     async sendChatMsgDialog() {
         this.sendChatMsgButtonIcon = 'pi pi-spinner-dotted pi-spin';
@@ -244,7 +245,7 @@ export class AppLayoutComponent implements OnDestroy {
             this.question = '';
 
             // send query to chatgpt
-            let contents = '';
+            this.generatedResponse = '';
             let answerDiv;
             for await (const content of this.layoutService.getChatCompletionGenerator(token, this.message, selectedModel)) {
                 if (!answerDiv) {
@@ -256,9 +257,9 @@ export class AppLayoutComponent implements OnDestroy {
                     this.sendChatMsgButtonIcon = 'pi pi-send';
                     this.sendChatMsgButtonSeverity = null;
                 }
-                contents += content
+                this.generatedResponse += content
                 // const safeContents = this.sanitizer.bypassSecurityTrustHtml(contents);
-                this.renderer.setProperty(answerDiv, 'innerHTML', contents);
+                this.renderer.setProperty(answerDiv, 'innerHTML', this.generatedResponse);
                 this.chatDialog.nativeElement.scrollTop = this.chatDialog.nativeElement.scrollHeight;
             }
             this.message.push(
@@ -288,5 +289,12 @@ export class AppLayoutComponent implements OnDestroy {
             },
         ]
         this.chatDialog = undefined;
+    }
+
+    updateEditor() {
+        this.chatMsgDialogVisible = false;
+        this.chatDialogVisible = false;
+        // this.cdr.detectChanges();
+        this.layoutService.updateSelectionText(this.generatedResponse)
     }
 }
