@@ -26,24 +26,7 @@ export class EditorComponent implements AfterViewInit, OnInit {
     toolbar!: ElementRef;
     quill!: Quill;
 
-    placeholder: string = `<h1 class="ql-align-center">Quill Rich Text Editor</h1>
-  <p>Quill is a free, <a href="https://github.com/slab/quill/">open source</a> WYSIWYG editor built for the modern web. With its <a href="https://quilljs.com/docs/modules/">modular architecture</a> and expressive <a href="https://quilljs.com/docs/api">API</a>, it is completely customizable to fit any need.</p>
-<!--  <h2 class="ql-align-center">Getting Started is Easy</h2>-->
-<!--  <pre data-language="javascript" class="ql-syntax" spellcheck="false"><span class="hljs-comment">// &lt;link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet"&gt;</span>-->
-<!--    <span class="hljs-comment">// &lt;script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"&gt;&lt;/script&gt;</span>-->
-<!--    <span class="hljs-keyword">const</span> quill = <span class="hljs-keyword">new</span> Quill(<span class="hljs-string">'#editor'</span>,-->
-<!--    {-->
-<!--      modules: {-->
-<!--        toolbar: <span class="hljs-string">'#toolbar'</span>-->
-<!--      },-->
-<!--      theme: <span class="hljs-string">'snow'</span>-->
-<!--    });-->
-<!--    <span class="hljs-comment">// Open your browser's developer console to try out the API!</span>-->
-<!--  </pre>-->
-<!--  <p class="ql-align-center"><strong>Built with</strong></p>-->
-<!--  <p class="ql-align-center"><span class="ql-formula" data-value="x^2 + (y - \\\\sqrt[3]{x^2})^2 = 1"></span></p>-->
-<!--  <p><br></p>-->
-  `;
+    placeholder: string = `<h1 class="ql-align-center">Quill Rich Text Editor</h1><p></p><p>Quill is a feature-rich WYSIWYG editor that offers a wide range of functionalities. Here are some samples of what the Quill editor can do: </p><p> 1. <strong>Text Formatting:</strong> Quill allows users to easily format text by providing options for <em>bold, italic, underline, strikethrough,</em> and more. ✍️ </p><p> 2. <strong>Lists:</strong> It supports both <em>ordered and unordered lists,</em> making it easy to create structured content. 📝 </p><p> 3. <strong>Embedding Images:</strong> Users can insert images directly into the editor and adjust their size and alignment. 🖼️ </p><p> 4. <strong>Links:</strong> Quill enables users to create hyperlinks within the text for easy navigation to external resources. 🔗 </p><p> 5. <strong>Custom Styles:</strong> Developers can create custom styles to provide users with predefined formatting options. 🎨</p>`;
 
     // toolbarOptions = [
     //   // [{'bold': ['bold', 'italic', 'underline', 'strike']}],
@@ -114,6 +97,7 @@ export class EditorComponent implements AfterViewInit, OnInit {
     //     'clean'
     //   ]                                         // remove formatting button
     // ];
+
     toolbarItems!: MenuItem[];
     private savedRange!: any;
     private editorHasFocus: boolean = true;

@@ -244,7 +244,7 @@ export class AppLayoutComponent implements OnDestroy {
                     }
                 );
             } else {
-                const question = `Question: ${this.question}`
+                const question = `${this.question}`
                 questionDiv.innerHTML = question;
                 this.message.push(
                     {
