@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {EditorModule} from 'primeng/editor';
 import {FormsModule} from '@angular/forms';
 import Quill, {Bounds} from 'quill';
@@ -118,7 +118,10 @@ export class EditorComponent implements AfterViewInit, OnInit {
     private savedRange!: any;
     private editorHasFocus: boolean = true;
 
-    constructor(protected layoutService: LayoutService) {
+    constructor(
+        protected layoutService: LayoutService,
+        private renderer: Renderer2
+    ) {
         this.toolbarItems = this.layoutService.toolbarItems;
         this.layoutService.generatedTextObservable$.subscribe(text => {
             if (!this.savedRange) return;
@@ -165,6 +168,7 @@ export class EditorComponent implements AfterViewInit, OnInit {
         this.editor.nativeElement.querySelector('.ql-editor').innerHTML = `${this.placeholder}`;
 
         this.quill.focus();
+
         this.quill.on('selection-change', (range, oldRange, source) => {
             if (range) {
                 if (range.length == 0) {
@@ -212,6 +216,18 @@ export class EditorComponent implements AfterViewInit, OnInit {
                 this.editorHasFocus = false;
                 this.overlayPanel.hide();
             }
+        });
+
+        this.quill.on('text-change', (delta, oldDelta, source) => {
+            this.applyEditorStyle()
+        });
+    }
+
+    applyEditorStyle() {
+        const pElements = this.editor.nativeElement.querySelectorAll('p');
+        pElements.forEach((p: HTMLElement) => {
+            this.renderer.setStyle(p, 'line-height', '1.5');
+            this.renderer.setStyle(p, 'margin', '0 0 1rem 0');
         });
     }
 }
