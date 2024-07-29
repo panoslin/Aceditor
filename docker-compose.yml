@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  frontend:
+    image: aceditor
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    restart: always
+    #volumes:
+    # - ./nginx.conf:/etc/nginx/conf.d/default.conf
+
