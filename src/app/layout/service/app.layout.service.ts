@@ -2,7 +2,7 @@ import {effect, ElementRef, Injectable, signal} from '@angular/core';
 import {BehaviorSubject, catchError, map, Observable, of, Subject} from 'rxjs';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "@src/environments/environment";
-import {MenuItem} from "primeng/api";
+import {MenuItem, MenuItemCommandEvent} from "primeng/api";
 import OpenAI from 'openai';
 
 export interface AppConfig {
@@ -57,11 +57,26 @@ export class LayoutService {
     private overlayOpen = new Subject<any>();
     overlayOpen$ = this.overlayOpen.asObservable();
 
-    private sendMessageParamsSubject = new Subject<SendMessageParams>();
-    sendMessageParams$ = this.sendMessageParamsSubject.asObservable();
+    private callSendChatMsgDialogSubject = new Subject<void>();
+    callSendChatMsgDialogObservable$ = this.callSendChatMsgDialogSubject.asObservable();
+
+    callSendChatMsgDialog() {
+        this.callSendChatMsgDialogSubject.next();
+    }
+
+    private sendMessageSubject = new Subject<SendMessageParams>();
+    sendMessageObservable$ = this.sendMessageSubject.asObservable();
+
+    sendMessage(params: SendMessageParams) {
+        this.sendMessageSubject.next(params);
+    }
 
     private chatMsgDialogVisible = new BehaviorSubject<boolean>(false);
     chatMsgDialogVisibleObservable$ = this.chatMsgDialogVisible.asObservable();
+
+    updateChatMsgDialogVisible(newStatus: boolean) {
+        this.chatMsgDialogVisible.next(newStatus);
+    }
 
     private editorSelectedText = new BehaviorSubject<string>('');
     editorSelectedTextObservable$ = this.editorSelectedText.asObservable();
@@ -70,27 +85,141 @@ export class LayoutService {
         this.editorSelectedText.next(text);
     }
 
-    updateChatMsgDialogVisible(newStatus: boolean) {
-        this.chatMsgDialogVisible.next(newStatus);
+    private prompt = new BehaviorSubject<string>('');
+    promptObservable$ = this.prompt.asObservable();
+
+    updateprompt(text: string) {
+        this.prompt.next(text);
     }
 
     toolbarItems: MenuItem[] = [
-        {label: '📝 Summarize'},
-        {label: '✨ Improve'},
-        {label: '🔍 Simplify'},
-        {label: '🔧 Expand'},
+        {
+            label: '📝 Summarize',
+            command: (event: MenuItemCommandEvent) => {
+                // show chat msg dialog
+                this.updateChatMsgDialogVisible(true);
+                // update questions
+                this.updateprompt(
+                    'You are a text summarization assistant. ' +
+                    'Your task is to summarize the provided sentences and return the summaries formatted as HTML.'
+                );
+                // call sendChatMsgDialog in layout ts
+                this.callSendChatMsgDialog();
+            }
+        },
+        {
+            label: '✨ Improve',
+            command: (event: MenuItemCommandEvent) => {
+                // show chat msg dialog
+                this.updateChatMsgDialogVisible(true);
+                // update questions
+                this.updateprompt(
+                    'You are an expert writing assistant. ' +
+                    'Your task is to improve and polish the provided text. ' +
+                    'Enhance the clarity, coherence, and style while ensuring grammatical correctness. '
+                );
+                // call sendChatMsgDialog in layout ts
+                this.callSendChatMsgDialog();
+            }
+        },
+        {
+            label: '🔍 Simplify',
+            command: (event: MenuItemCommandEvent) => {
+                // show chat msg dialog
+                this.updateChatMsgDialogVisible(true);
+                // update questions
+                this.updateprompt(
+                    'You are a writing assistant specialized in simplifying complex texts. ' +
+                    'Your task is to simplify the provided text, ' +
+                    'making it easier to understand while retaining the original meaning.'
+                );
+                // call sendChatMsgDialog in layout ts
+                this.callSendChatMsgDialog();
+            }
+        },
+        {
+            label: '🔧 Expand',
+            command: (event: MenuItemCommandEvent) => {
+                // show chat msg dialog
+                this.updateChatMsgDialogVisible(true);
+                // update questions
+                this.updateprompt(
+                    'You are a writing assistant specialized in expanding texts. ' +
+                    'Your task is to expand the provided text by adding relevant details, explanations, and examples. ' +
+                    'Ensure the expanded text is coherent and maintains the original meaning.'
+                );
+                // call sendChatMsgDialog in layout ts
+                this.callSendChatMsgDialog();
+            }
+        },
         {
             label: '🎨 Change Tone',
             items: [
-                {label: '🏢 Professional'},
-                {label: '🏠 Casual'},
+                {
+                    label: '🏢 Professional',
+                    command: (event: MenuItemCommandEvent) => {
+                        // show chat msg dialog
+                        this.updateChatMsgDialogVisible(true);
+                        // update questions
+                        this.updateprompt(
+                            'You are a writing assistant specialized in adjusting the tone of texts. ' +
+                            'Your task is to change the tone of the provided text to be more professional and formal. ' +
+                            'Ensure the revised text is clear, concise, and retains the original meaning.'
+                        );
+                        // call sendChatMsgDialog in layout ts
+                        this.callSendChatMsgDialog();
+                    }
+                },
+                {
+                    label: '🏠 Casual',
+                    command: (event: MenuItemCommandEvent) => {
+                        // show chat msg dialog
+                        this.updateChatMsgDialogVisible(true);
+                        // update questions
+                        this.updateprompt(
+                            'You are a writing assistant specialized in adjusting the tone of texts. ' +
+                            'Your task is to change the tone of the provided text to be more casual and conversational. ' +
+                            'Ensure the revised text is easy to read, engaging, and retains the original meaning.'
+                        );
+                        // call sendChatMsgDialog in layout ts
+                        this.callSendChatMsgDialog();
+                    }
+                },
             ]
         },
         {
             label: '🖋️ Change Style',
             items: [
-                {label: '💼 Business'},
-                {label: '🎓 Academic'},
+                {
+                    label: '💼 Business',
+                    command: (event: MenuItemCommandEvent) => {
+                        // show chat msg dialog
+                        this.updateChatMsgDialogVisible(true);
+                        // update questions
+                        this.updateprompt(
+                            'You are a writing assistant specialized in adjusting the style of texts. ' +
+                            'Your task is to change the style of the provided text to be more business-facing. ' +
+                            'Ensure the revised text is professional, concise, and retains the original meaning.'
+                        );
+                        // call sendChatMsgDialog in layout ts
+                        this.callSendChatMsgDialog();
+                    }
+                },
+                {
+                    label: '🎓 Academic',
+                    command: (event: MenuItemCommandEvent) => {
+                        // show chat msg dialog
+                        this.updateChatMsgDialogVisible(true);
+                        // update questions
+                        this.updateprompt(
+                            'You are a writing assistant specialized in adjusting the style of texts. ' +
+                            'Your task is to change the style of the provided text to be more academic. ' +
+                            'Ensure the revised text is formal, detailed, and retains the original meaning.'
+                        );
+                        // call sendChatMsgDialog in layout ts
+                        this.callSendChatMsgDialog();
+                    }
+                },
             ]
         }
     ];
@@ -294,10 +423,6 @@ export class LayoutService {
                 return of([]);
             })
         );
-    }
-
-    sendMessage(params: SendMessageParams) {
-        this.sendMessageParamsSubject.next(params);
     }
 
     private generatedTextSubject = new BehaviorSubject<string>('');

@@ -69,6 +69,14 @@ export class AppLayoutComponent implements OnDestroy {
         // private sanitizer: DomSanitizer
     ) {
 
+        this.layoutService.callSendChatMsgDialogObservable$.subscribe(() => {
+            this.sendChatMsgDialog().then(r => {
+            });
+        });
+
+        this.layoutService.promptObservable$.subscribe(text => {
+            this.question = text;
+        });
         this.layoutService.editorSelectedTextObservable$.subscribe(text => {
             this.editorSelectedText = text;
         });
@@ -114,7 +122,7 @@ export class AppLayoutComponent implements OnDestroy {
                 this.hideProfileMenu();
             });
 
-        this.layoutService.sendMessageParams$.subscribe(params => {
+        this.layoutService.sendMessageObservable$.subscribe(params => {
             this.showMessage(params.severity, params.summary, params.detail);
         });
     }
@@ -194,6 +202,7 @@ export class AppLayoutComponent implements OnDestroy {
             role: 'system',
             content: 'Answer the question based on the context below. ' +
                 'The response should be in HTML format. ' +
+                'The response should not include any markdown syntax. ' +
                 'The response should preserve any HTML formatting, links, and styles in the context.'
         },
     ];
@@ -223,21 +232,24 @@ export class AppLayoutComponent implements OnDestroy {
             this.renderer.addClass(questionDiv, 'mb-4');
             this.renderer.setProperty(questionDiv, 'style', 'float: right;background-color: yellowgreen');
             this.renderer.appendChild(this.chatDialog.nativeElement, questionDiv);
-            questionDiv.innerHTML = this.question;
 
             // construct message
             if (this.message.length === 1 && this.editorSelectedText) {
+                const question = `Question: ${this.question}<br><br><br>Context: ${this.editorSelectedText}`
+                questionDiv.innerHTML = question;
                 this.message.push(
                     {
                         role: 'user',
-                        content: `Question: ${this.question}\n\n\nContext: ${this.editorSelectedText}`
+                        content: question
                     }
                 );
             } else {
+                const question = `Question: ${this.question}`
+                questionDiv.innerHTML = question;
                 this.message.push(
                     {
                         role: 'user',
-                        content: `Question: ${this.question}`
+                        content: question
                     }
                 );
 
