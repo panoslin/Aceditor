@@ -235,7 +235,7 @@ export class AppLayoutComponent implements OnDestroy {
 
             // construct message
             if (this.message.length === 1 && this.editorSelectedText) {
-                const question = `Question: ${this.question}<br><br><br>Context: ${this.editorSelectedText}`
+                const question = `${this.question}<br><br><br><br>${this.editorSelectedText}`
                 questionDiv.innerHTML = question;
                 this.message.push(
                     {
@@ -244,7 +244,7 @@ export class AppLayoutComponent implements OnDestroy {
                     }
                 );
             } else {
-                const question = `${this.question}`
+                const question = this.question
                 questionDiv.innerHTML = question;
                 this.message.push(
                     {
@@ -254,7 +254,6 @@ export class AppLayoutComponent implements OnDestroy {
                 );
 
             }
-            this.question = '';
 
             // send query to chatgpt
             this.generatedResponse = '';
@@ -274,6 +273,7 @@ export class AppLayoutComponent implements OnDestroy {
                 this.renderer.setProperty(answerDiv, 'innerHTML', this.generatedResponse);
                 this.chatDialog.nativeElement.scrollTop = this.chatDialog.nativeElement.scrollHeight;
             }
+            this.question = '';
             this.message.push(
                 {
                     role: 'assistant',
