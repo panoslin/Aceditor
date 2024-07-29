@@ -149,7 +149,15 @@ export class EditorComponent implements AfterViewInit, OnInit {
         this.editor.nativeElement.querySelector('.ql-editor').style.boxShadow = '0px 3px 5px rgba(0, 0, 0, 0.02),\n' +
             '    0px 0px 2px rgba(0, 0, 0, 0.05),\n' +
             '    0px 1px 4px rgba(0, 0, 0, 0.08)';
-        this.editor.nativeElement.querySelector('.ql-editor').innerHTML = `${this.placeholder}`;
+
+        // load editor content
+        if (localStorage.getItem('editorHTML') !== null) {
+            this.editor.nativeElement.querySelector('.ql-editor').innerHTML = localStorage.getItem('editorHTML');
+        } else {
+            this.editor.nativeElement.querySelector('.ql-editor').innerHTML = `${this.placeholder}`;
+
+        }
+
 
         this.quill.focus();
 
@@ -204,6 +212,10 @@ export class EditorComponent implements AfterViewInit, OnInit {
 
         this.quill.on('text-change', (delta, oldDelta, source) => {
             this.applyEditorStyle()
+        });
+
+        this.quill.on('text-change', (delta, oldDelta, source) => {
+            localStorage.setItem('editorHTML', this.editor.nativeElement.querySelector('.ql-editor').innerHTML);
         });
     }
 
