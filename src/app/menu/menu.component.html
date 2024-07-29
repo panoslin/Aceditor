@@ -132,7 +132,7 @@
         <p-dialog
             (onHide)="hideSettingDialog()"
             [(visible)]="settingDialogVisible"
-            [style]="{ width: '30rem', height: '18rem' }"
+            [style]="{ width: '30rem', height: '23rem' }"
             header="Settings"
         >
             <!--      <span class="p-text-secondary block mb-5">Update your information.</span>-->
@@ -145,7 +145,11 @@
                 <label class="font-semibold w-8rem">chatGPT Model</label>
                 <p-dropdown
                     [(ngModel)]="selectedModel"
-                    [options]="[{name: 'GPT-3.5 Turbo', code: 'gpt-3.5-turbo'}, {name: 'GPT-4o', code: 'gpt-4o'}, {name: 'GPT-4o Mini', code: 'gpt-4o-mini'}]"
+                    [options]="[
+                        {name: '🚀 GPT-3.5 Turbo', code: 'gpt-3.5-turbo'},
+                        {name: '🧠 GPT-4o', code: 'gpt-4o'},
+                        {name: '📱 GPT-4o Mini', code: 'gpt-4o-mini'}
+                    ]"
                     [style]="{ width: '100%' }"
                     class="flex-auto"
                     optionLabel="name"

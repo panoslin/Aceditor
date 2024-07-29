@@ -31,10 +31,7 @@ export class MenuComponent {
 
     settingDialogVisible: boolean = false;
     token: string = '';
-    selectedModel: { name: string, code: string } = {
-        name: 'GPT-3.5 Turbo',
-        code: 'gpt-3.5-turbo'
-    };
+    selectedModel: { name: string, code: string } = {name: '🚀 GPT-3.5 Turbo', code: 'gpt-3.5-turbo'};
     selectedPrompt: string = '';
     prompts!: MenuItem[];
     protected authDialogVisible: boolean = false;
