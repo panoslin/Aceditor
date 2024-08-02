@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
 import {EditorModule} from 'primeng/editor';
 import {FormsModule} from '@angular/forms';
 import Quill, {Bounds} from 'quill';
@@ -17,7 +17,8 @@ import {SplitButtonModule} from "primeng/splitbutton";
     standalone: true,
     imports: [FormsModule, EditorModule, OverlayPanelModule, MenubarModule, Button, Ripple, NgClass, NgIf, InputTextModule, SplitButtonModule],
     templateUrl: './editor.component.html',
-    styleUrls: ['./editor.component.scss']
+    styleUrls: ['./editor.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class EditorComponent implements AfterViewInit, OnInit {
     @ViewChild('editor', {static: true}) editor!: ElementRef;
@@ -142,13 +143,6 @@ export class EditorComponent implements AfterViewInit, OnInit {
         Size.whitelist = ['10px', '12px', '14px', '16px', '18px', '24px', '36px'];
         // @ts-ignore
         Quill.register(Size, true);
-
-        this.editor.nativeElement.querySelector('.ql-editor').style.borderRadius = '12px';
-        this.editor.nativeElement.querySelector('.ql-editor').style.background = '#f1f1f1';
-        this.editor.nativeElement.querySelector('.ql-editor').style.padding = '5% 8% 25px';
-        this.editor.nativeElement.querySelector('.ql-editor').style.boxShadow = '0px 3px 5px rgba(0, 0, 0, 0.02),\n' +
-            '    0px 0px 2px rgba(0, 0, 0, 0.05),\n' +
-            '    0px 1px 4px rgba(0, 0, 0, 0.08)';
 
         // load editor content
         if (localStorage.getItem('editorHTML') !== null) {
