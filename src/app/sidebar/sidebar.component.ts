@@ -8,6 +8,38 @@ import {LayoutService} from '../layout/service/app.layout.service';
 import {BadgeModule} from "primeng/badge";
 import {Ripple} from "primeng/ripple";
 import {SidebarItem} from "@src/app/sidebar/sidebar.item";
+import {HttpClient} from "@angular/common/http";
+import {forkJoin, Observable} from "rxjs";
+import {environment} from "@src/environments/environment";
+
+interface User {
+    id: number;
+    username: string;
+    email: string;
+    password: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+interface File {
+    id: number;
+    name: string;
+    content: string;
+    user: User;
+    createdAt: string;
+    updatedAt: string;
+}
+
+interface Folder {
+    id: number;
+    name: string;
+    user: User;
+    files: File[];
+    subfolders: Folder[];
+    createdAt: string;
+    updatedAt: string;
+}
+
 
 @Component({
     selector: 'app-sidebar',
@@ -16,52 +48,71 @@ import {SidebarItem} from "@src/app/sidebar/sidebar.item";
     imports: [NgFor, NgIf, PanelMenuModule, BadgeModule, Ripple, SidebarItem]
 })
 export class SidebarComponent implements OnInit {
+    apiEndpoint = environment.apiEndpoint;
 
     model: MenuItem[] = [];
 
-    constructor(public layoutService: LayoutService, public el: ElementRef) {
+    constructor(
+        public layoutService: LayoutService,
+        public el: ElementRef,
+        private http: HttpClient
+    ) {
+    }
+
+    fetchData(endpoint: string): Observable<any> {
+        return this.http.get<any>(`${this.apiEndpoint}/api/${endpoint}`);
+    }
+
+    fetchRoot(): Observable<any> {
+        return forkJoin({
+            files: this.fetchData('files/root'),
+            folders: this.fetchData('folders/root'),
+        });
     }
 
     ngOnInit() {
-        this.model = [
-            {
-                label: 'Home',
-                expanded: true,
-                items: [
-                    {label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/']}
-                ]
+        this.fetchRoot().subscribe({
+            next: (results) => {
+                this.model = this.processData(results);
             },
-            {
-                label: 'Pages',
-                icon: 'pi pi-map',
-                expanded: true,
-                badge: '2',
-                items: [
-                    {
-                        label: 'Landing',
-                        icon: 'pi pi-fw pi-globe',
-                        routerLink: ['/landing']
-                    },
-                    {
-                        label: 'Auth',
-                        icon: 'pi pi-fw pi-user',
-                        badge: '2',
-                        items: [
-                            {
-                                label: 'Login',
-                                shortcut: '⌘+S',
-                                icon: 'pi pi-fw pi-sign-in',
-                                routerLink: ['/auth/login']
-                            },
-                            {
-                                label: 'Logout',
-                                icon: 'pi pi-sign-out',
-                                routerLink: ['/auth/error']
-                            },
-                        ]
-                    },
-                ]
+            error: (err) => {
+                this.layoutService.sendMessage({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Error on API requests: \n' + err.message
+                })
+                this.layoutService.updatePageStatus(false);
             },
-        ];
+            complete: () => {
+                this.layoutService.updatePageStatus(false);
+            }
+        });
+    }
+
+
+    processData(results: { files: File[]; folders: Folder[]; }): any {
+        const {files, folders} = results;
+
+        let directory: { label: string; icon: string; items?: any; }[] = [];
+
+        folders.forEach((folder: Folder) => {
+            directory.push({
+                label: folder.name,
+                icon: 'pi pi-fw pi-folder',
+                items: this.processData({
+                    files: folder.files,
+                    folders: folder.subfolders
+                })
+            })
+        });
+
+        files.forEach((file: File) => {
+            directory.push({
+                label: file.name,
+                icon: 'pi pi-fw pi-file',
+            })
+        });
+
+        return directory;
     }
 }
