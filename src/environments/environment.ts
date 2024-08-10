@@ -4,7 +4,8 @@
 
 export const environment = {
     production: false,
-    chatGptApiEndpoint: 'https://api.openai.com/v1/chat/completions'
+    chatGptApiEndpoint: 'https://api.openai.com/v1/chat/completions',
+    apiEndpoint: 'http://localhost:8080',
 };
 
 /*
