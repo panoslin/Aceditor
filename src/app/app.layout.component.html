@@ -38,7 +38,7 @@
                             >
 
                             </p-button>
-<!--                            <p-button label="Regenerate" icon="pi pi-refresh"></p-button>-->
+                            <!--                            <p-button label="Regenerate" icon="pi pi-refresh"></p-button>-->
                         </div>
                     </div>
                     <div class="flex align-items-center gap-3 mb-3" style="margin-top: 1rem">
@@ -57,12 +57,10 @@
             </p-dialog>
             <router-outlet></router-outlet>
         </div>
-        <!--        <app-status></app-status>-->
+        <app-status></app-status>
     </div>
     <app-config></app-config>
     <div class="layout-mask"></div>
 
-    <div class="card flex justify-content-center">
-        <p-toast [life]="10000" [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"/>
-    </div>
+    <p-toast [life]="10000" [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }"/>
 </div>

@@ -11,9 +11,12 @@ import {LayoutService} from "../layout/service/app.layout.service";
     imports: [NgIf, ProgressBarModule],
 })
 export class StatusComponent {
-    loading: boolean = false;
+    loading: boolean = true;
 
     constructor(public layoutService: LayoutService) {
+        this.layoutService.pageStatusObservable.subscribe(status => {
+            this.loading = status;
+        });
     }
 
 }

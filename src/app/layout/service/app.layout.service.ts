@@ -431,4 +431,11 @@ export class LayoutService {
     updateSelectionText(text: string) {
         this.generatedTextSubject.next(text);
     }
+
+    private pageStatus = new BehaviorSubject<boolean>(true);
+    pageStatusObservable = this.pageStatus.asObservable();
+
+    updatePageStatus(newStatus: boolean) {
+        this.pageStatus.next(newStatus);
+    }
 }
