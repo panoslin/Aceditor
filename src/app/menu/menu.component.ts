@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
 import {LayoutService} from "../layout/service/app.layout.service";
 import {NgClass} from '@angular/common';
 import {RouterLink} from '@angular/router';
@@ -12,12 +12,15 @@ import {CheckboxModule} from "primeng/checkbox";
 import {DropdownModule} from "primeng/dropdown";
 import {FormsModule} from "@angular/forms";
 import {Ripple} from "primeng/ripple";
+import {PasswordModule} from "primeng/password";
 
 @Component({
     selector: 'app-menu',
     templateUrl: './menu.component.html',
     standalone: true,
-    imports: [RouterLink, NgClass, MenubarModule, DialogModule, ButtonModule, InputTextModule, SplitButtonModule, CheckboxModule, DropdownModule, FormsModule, Ripple],
+    imports: [RouterLink, NgClass, MenubarModule, DialogModule, ButtonModule, InputTextModule, SplitButtonModule, CheckboxModule, DropdownModule, FormsModule, Ripple, PasswordModule,],
+    encapsulation: ViewEncapsulation.None,
+    styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent {
 
@@ -36,6 +39,7 @@ export class MenuComponent {
     prompts!: MenuItem[];
     protected authDialogVisible: boolean = false;
     protected AISidebarVisible: boolean = false;
+    password?: string;
 
     constructor(public layoutService: LayoutService) {
         const userSettings = localStorage.getItem('userSettings');
