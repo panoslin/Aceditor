@@ -84,7 +84,10 @@
          class="layout-topbar-menu">
 
         <button (click)="toggleAuthDialog()" class="p-link layout-topbar-button">
-            <i class="pi pi-user"></i>
+            <img *ngIf="(user$ | async) as user; else defaultIcon" alt="logo" ngSrc="{{userProfile.imageUrl}}" style="height: 2.5rem; width: 2.5rem; border-radius: 50%; object-fit: cover;" fill="">
+            <ng-template #defaultIcon>
+                <i class="pi pi-user"></i>
+            </ng-template>
             <span>Profile</span>
         </button>
 
@@ -95,30 +98,39 @@
             closable="false"
             header="Header"
         >
+
             <ng-template pTemplate="header">
                 <div class="text-center mb-5 w-full">
-                    <img alt="Image" class="mb-3" height="50" src="../../assets/layout/images/logo.png">
-                    <div class="text-900 text-3xl font-medium mb-3">Welcome Back</div>
-                    <span class="text-600 font-medium line-height-3">Don't have an account?</span>
-                    <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Create today!</a>
+                    <img *ngIf="!(user$ | async) as user" alt="Image" class="mb-3" height="50" src="../../assets/layout/images/logo.png">
+                    <img *ngIf="(user$ | async) as user" alt="Image" class="mb-3" height="50" src="{{userProfile.imageUrl}}">
+                    <div *ngIf="!(user$ | async) as user" class="text-900 text-3xl font-medium mb-3">Please Sign In
+                    </div>
+                    <div *ngIf="(user$ | async) as user" class="text-900 text-3xl font-medium mb-3">Welcome
+                                                                                                    Back, {{ userProfile.name }}
+                    </div>
+                    <p *ngIf="(user$ | async) as user">Email: {{ userProfile.email }}</p>
                 </div>
 
             </ng-template>
-            <div>
-                <label class="block text-900 font-medium mb-2" for="email1">Email</label>
-                <input class="w-full mb-3" id="email1" pInputText type="text">
+            <div *ngIf="!(user$ | async) as user">
+                <!--                <label class="block text-900 font-medium mb-2" for="email1">Email</label>-->
+                <!--                <input class="w-full mb-3" id="email1" pInputText type="text">-->
 
-                <label class="block text-900 font-medium mb-2" for="password1">Password</label>
-                <p-password styleClass="w-full mb-3" id="password1" [(ngModel)]="password" [feedback]="false" toggleMask="true"/>
-                <div class="flex align-items-center justify-content-between mb-6">
-                    <div class="flex align-items-center">
-                        <p-checkbox [binary]="true" id="rememberme1" styleClass="mr-2"></p-checkbox>
-                        <label for="rememberme1">Remember me</label>
-                    </div>
-                    <!--          <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>-->
-                </div>
-                <button (click)="hideAuthDialog()" class="w-full" icon="pi pi-user" label="Sign In" pButton pRipple></button>
+                <!--                <label class="block text-900 font-medium mb-2" for="password1">Password</label>-->
+                <!--                <p-password styleClass="w-full mb-3" id="password1" [(ngModel)]="password" [feedback]="false" toggleMask="true"/>-->
+                <!--                <div class="flex align-items-center justify-content-between mb-6">-->
+                <!--                    <div class="flex align-items-center">-->
+                <!--                        <p-checkbox [binary]="true" id="rememberme1" styleClass="mr-2"></p-checkbox>-->
+                <!--                        <label for="rememberme1">Remember me</label>-->
+                <!--                    </div>-->
+                <!--                    &lt;!&ndash;          <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>&ndash;&gt;-->
+                <!--                </div>-->
+                <button (click)="login()" class="w-full" icon="pi pi-sign-in" label="Sign In with Google" pButton pRipple></button>
             </div>
+            <div *ngIf="(user$ | async) as user">
+                <button (click)="logout()" class="w-full" icon="pi pi-sign-out" label="Sign Out" pButton pRipple></button>
+            </div>
+
         </p-dialog>
 
 

@@ -1,6 +1,6 @@
-import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, inject, ViewChild, ViewEncapsulation} from '@angular/core';
 import {LayoutService} from "../layout/service/app.layout.service";
-import {NgClass} from '@angular/common';
+import {AsyncPipe, NgClass, NgIf, NgOptimizedImage} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {MenubarModule} from 'primeng/menubar';
 import {MenuItem} from 'primeng/api';
@@ -12,17 +12,27 @@ import {CheckboxModule} from "primeng/checkbox";
 import {DropdownModule} from "primeng/dropdown";
 import {FormsModule} from "@angular/forms";
 import {Ripple} from "primeng/ripple";
-import {PasswordModule} from "primeng/password";
+import {AuthGoogleService} from "@src/app/layout/service/auth-google.service";
+
+interface UserProfile {
+    name: string;
+    email: string;
+    imageUrl: string;
+}
 
 @Component({
     selector: 'app-menu',
     templateUrl: './menu.component.html',
     standalone: true,
-    imports: [RouterLink, NgClass, MenubarModule, DialogModule, ButtonModule, InputTextModule, SplitButtonModule, CheckboxModule, DropdownModule, FormsModule, Ripple, PasswordModule,],
+    imports: [RouterLink, NgClass, MenubarModule, DialogModule, ButtonModule, InputTextModule, SplitButtonModule, CheckboxModule, DropdownModule, FormsModule, Ripple, AsyncPipe, NgIf, NgOptimizedImage,],
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent {
+    private authService = inject(AuthGoogleService);
+    user$ = this.authService.userProfile$;
+
+    userProfile!: UserProfile;
 
     @ViewChild('menubutton') menuButton!: ElementRef;
 
@@ -49,6 +59,7 @@ export class MenuComponent {
             this.selectedModel = settings.model || this.selectedModel;
         }
         this.prompts = this.layoutService.toolbarItems;
+        this.authService.getProfile();
     }
 
     toggleSettingDialog() {
@@ -67,7 +78,17 @@ export class MenuComponent {
     }
 
     ngOnInit(): void {
+        this.user$.subscribe(user => {
+            if (user) {
+                this.userProfile = {
+                    name: user.name || '',
+                    email: user.email || '',
+                    imageUrl: user.imageUrl || ''
+                };
+            }
+        })
         this.layoutService.setToolbarElementRef(this.toolbar);
+        // this.authService.getProfile();
     }
 
     toggleAuthDialog() {
@@ -77,6 +98,18 @@ export class MenuComponent {
 
     toggleAISidebar() {
         this.AISidebarVisible = !this.AISidebarVisible;
+    }
+
+    login() {
+        this.authService.login();
+        this.hideAuthDialog();
+    }
+
+    logout() {
+        this.authService.logout();
+        this.hideAuthDialog();
+        // refresh the page
+        window.location.reload();
     }
 
     protected hideAuthDialog() {
