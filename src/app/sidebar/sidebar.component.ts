@@ -9,8 +9,9 @@ import {BadgeModule} from "primeng/badge";
 import {Ripple} from "primeng/ripple";
 import {SidebarItem} from "@src/app/sidebar/sidebar.item";
 import {HttpClient} from "@angular/common/http";
-import {forkJoin, Observable} from "rxjs";
+import {async, forkJoin, Observable} from "rxjs";
 import {environment} from "@src/environments/environment";
+import {AuthGoogleService} from "@src/app/layout/service/auth-google.service";
 
 interface User {
     id: number;
@@ -54,6 +55,7 @@ export class SidebarComponent implements OnInit {
 
     constructor(
         public layoutService: LayoutService,
+        public authService: AuthGoogleService,
         public el: ElementRef,
         private http: HttpClient
     ) {
@@ -71,22 +73,25 @@ export class SidebarComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.fetchRoot().subscribe({
-            next: (results) => {
-                this.model = this.processData(results);
-            },
-            error: (err) => {
-                this.layoutService.sendMessage({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Error on API requests: \n' + err.message
-                })
-                this.layoutService.updatePageStatus(false);
-            },
-            complete: () => {
-                this.layoutService.updatePageStatus(false);
-            }
-        });
+        if (this.authService.isAuthenticated()) {
+            this.fetchRoot().subscribe({
+                next: (results) => {
+                    this.model = this.processData(results);
+                },
+                error: (err) => {
+                    this.layoutService.sendMessage({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Error on API requests: \n' + err.message
+                    })
+                    this.layoutService.updatePageStatus(false);
+                },
+                complete: () => {
+                    this.layoutService.updatePageStatus(false);
+                }
+            });
+
+        }
     }
 
 
