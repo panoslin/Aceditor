@@ -2,8 +2,9 @@ import {inject, Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthConfig, OAuthEvent, OAuthService} from 'angular-oauth2-oidc';
 import {BehaviorSubject, Observable} from "rxjs";
+import {HttpClient} from "@angular/common/http";
 
-interface UserProfile {
+export interface UserProfile {
     name: string;
     email: string;
     imageUrl: string;
@@ -19,7 +20,7 @@ export class AuthGoogleService {
     private userProfileSubject: BehaviorSubject<UserProfile | null> = new BehaviorSubject<UserProfile | null>(null);
     public userProfile$: Observable<UserProfile | null> = this.userProfileSubject.asObservable();
 
-    constructor() {
+    constructor(private http: HttpClient) {
         this.initConfiguration();
         this.oAuthService.events.subscribe((event: OAuthEvent) => {
             if (event.type === 'token_received') {
@@ -43,10 +44,17 @@ export class AuthGoogleService {
             issuer: 'https://accounts.google.com',
             strictDiscoveryDocumentValidation: false,
             clientId: '536318037598-gjdot75lm7badsm06jdve06fpoivalth.apps.googleusercontent.com',
-            redirectUri: window.location.origin + '',
-            scope: 'profile email',
-            // responseType: 'code',
-            // showDebugInformation: true,
+            redirectUri: window.location.origin + '/login/callback',
+            scope: 'profile email openid',
+            // responseType: 'code token',
+            // dummyClientSecret: 'secret',
+            showDebugInformation: true,
+            // URL of the client's logout redirect URI (where the OAuth2 provider will redirect after logout)
+            postLogoutRedirectUri: window.location.origin,
+            // Enable OIDC (OpenID Connect)
+            // oidc: true,
+            // useSilentRefresh: true,
+            // requireHttps: true,
         };
 
         this.oAuthService.configure(authConfig);
@@ -64,20 +72,20 @@ export class AuthGoogleService {
     }
 
     getProfile() {
-        const profile =  this.oAuthService.getIdentityClaims();
+        const profile = this.oAuthService.getIdentityClaims();
         if (profile) {
             const userProfile: UserProfile = {
                 name: profile['name'],
                 email: profile['email'],
                 imageUrl: profile['picture'],
             }
-            this.userProfileSubject.next(userProfile);
+            // this.userProfileSubject.next(userProfile);
             return userProfile;
         }
         return null;
     }
 
-    getToken() {
+    getAccessToken() {
         return this.oAuthService.getAccessToken();
     }
 
