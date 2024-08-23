@@ -9,7 +9,7 @@ import {BadgeModule} from "primeng/badge";
 import {Ripple} from "primeng/ripple";
 import {SidebarItem} from "@src/app/sidebar/sidebar.item";
 import {HttpClient} from "@angular/common/http";
-import {async, forkJoin, Observable} from "rxjs";
+import {forkJoin, Observable} from "rxjs";
 import {environment} from "@src/environments/environment";
 import {AuthGoogleService} from "@src/app/layout/service/auth-google.service";
 
@@ -62,7 +62,14 @@ export class SidebarComponent implements OnInit {
     }
 
     fetchData(endpoint: string): Observable<any> {
-        return this.http.get<any>(`${this.apiEndpoint}/api/${endpoint}`);
+        return this.http.get<any>(
+            `${this.apiEndpoint}/api/${endpoint}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${this.authService.getIdToken()}`
+                }
+            }
+        );
     }
 
     fetchRoot(): Observable<any> {
@@ -73,25 +80,26 @@ export class SidebarComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (this.authService.isAuthenticated()) {
-            this.fetchRoot().subscribe({
-                next: (results) => {
-                    this.model = this.processData(results);
-                },
-                error: (err) => {
-                    this.layoutService.sendMessage({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'Error on API requests: \n' + err.message
-                    })
-                    this.layoutService.updatePageStatus(false);
-                },
-                complete: () => {
-                    this.layoutService.updatePageStatus(false);
-                }
-            });
-
-        }
+        this.authService.userProfile$.subscribe((profile) => {
+            if (profile) {
+                this.fetchRoot().subscribe({
+                    next: (results) => {
+                        this.model = this.processData(results);
+                    },
+                    error: (err) => {
+                        this.layoutService.sendMessage({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: 'Error on API requests: \n' + err.message
+                        })
+                        this.layoutService.updatePageStatus(false);
+                    },
+                    complete: () => {
+                        this.layoutService.updatePageStatus(false);
+                    }
+                });
+            }
+        })
     }
 
 

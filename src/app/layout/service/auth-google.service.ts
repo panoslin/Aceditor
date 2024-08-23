@@ -85,8 +85,8 @@ export class AuthGoogleService {
         return null;
     }
 
-    getAccessToken() {
-        return this.oAuthService.getAccessToken();
+    getIdToken() {
+        return this.oAuthService.getIdToken();
     }
 
     isAuthenticated() {
