@@ -64,6 +64,13 @@ export class LayoutService {
         this.callSendChatMsgDialogSubject.next();
     }
 
+    private callToggleAuthDialogSub = new Subject<void>();
+    callToggleAuthDialogObservable$ = this.callToggleAuthDialogSub.asObservable();
+
+    callToggleAuthDialog() {
+        this.callToggleAuthDialogSub.next();
+    }
+
     private sendMessageSubject = new Subject<SendMessageParams>();
     sendMessageObservable$ = this.sendMessageSubject.asObservable();
 

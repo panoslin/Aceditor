@@ -12,13 +12,8 @@ import {CheckboxModule} from "primeng/checkbox";
 import {DropdownModule} from "primeng/dropdown";
 import {FormsModule} from "@angular/forms";
 import {Ripple} from "primeng/ripple";
-import {AuthGoogleService} from "@src/app/layout/service/auth-google.service";
+import {AuthGoogleService, UserProfile} from "@src/app/layout/service/auth-google.service";
 
-interface UserProfile {
-    name: string;
-    email: string;
-    imageUrl: string;
-}
 
 @Component({
     selector: 'app-menu',
@@ -78,6 +73,9 @@ export class MenuComponent {
     }
 
     ngOnInit(): void {
+        this.layoutService.callToggleAuthDialogObservable$.subscribe(() => {
+            this.toggleAuthDialog();
+        })
         this.user$.subscribe(user => {
             if (user) {
                 this.userProfile = {

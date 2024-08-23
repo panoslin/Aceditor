@@ -105,6 +105,19 @@ export class SidebarComponent implements OnInit {
                         this.layoutService.updatePageStatus(false);
                     }
                 });
+            } else {
+                this.model = [{
+                    label: 'Home',
+                    icon: 'pi pi-fw pi-home',
+                    items: [{
+                        label: 'Login',
+                        icon: 'pi pi-fw pi-sign-in',
+                        command: () => {
+                            this.layoutService.callToggleAuthDialog();
+                        }
+                    }]
+                }];
+                this.layoutService.updatePageStatus(false);
             }
         })
     }

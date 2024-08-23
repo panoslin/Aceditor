@@ -5,7 +5,7 @@
     </a>
 
     <button #menubutton (click)="layoutService.onMenuToggle()" class="p-link layout-menu-button layout-topbar-button" style="margin-right: 8px">
-        <i class="pi pi-bars"></i>
+        <i class="pi pi-folder-open"></i>
     </button>
 
     <div #toolbar class="p-editor-toolbar" id="toolbar" style="border: none !important;">
@@ -95,23 +95,19 @@
         <p-dialog
             [(visible)]="authDialogVisible"
             [style]="{ width: '35rem' }"
-            closable="false"
-            header="Header"
+            closable="true"
         >
-
-            <ng-template pTemplate="header">
-                <div class="text-center mb-5 w-full">
-                    <img *ngIf="!(user$ | async) as user" alt="Image" class="mb-3" height="50" src="../../assets/layout/images/logo.png">
-                    <img *ngIf="(user$ | async) as user" alt="Image" class="mb-3" height="50" src="{{userProfile.imageUrl}}">
-                    <div *ngIf="!(user$ | async) as user" class="text-900 text-3xl font-medium mb-3">Please Sign In
-                    </div>
-                    <div *ngIf="(user$ | async) as user" class="text-900 text-3xl font-medium mb-3">Welcome
-                                                                                                    Back, {{ userProfile.name }}
-                    </div>
-                    <p *ngIf="(user$ | async) as user">Email: {{ userProfile.email }}</p>
+            <div class="text-center mb-5 w-full">
+                <img *ngIf="!(user$ | async) as user" alt="Image" class="mb-3" height="50" src="../../assets/layout/images/logo.png">
+                <img *ngIf="(user$ | async) as user" alt="Image" class="mb-3" height="50" src="{{userProfile.imageUrl}}">
+                <div *ngIf="!(user$ | async) as user" class="text-900 text-3xl font-medium mb-3">Please Sign In
                 </div>
+                <div *ngIf="(user$ | async) as user" class="text-900 text-3xl font-medium mb-3">Welcome
+                                                                                                Back, {{ userProfile.name }}
+                </div>
+                <p *ngIf="(user$ | async) as user">Email: {{ userProfile.email }}</p>
+            </div>
 
-            </ng-template>
             <div *ngIf="!(user$ | async) as user">
                 <!--                <label class="block text-900 font-medium mb-2" for="email1">Email</label>-->
                 <!--                <input class="w-full mb-3" id="email1" pInputText type="text">-->
@@ -125,7 +121,7 @@
                 <!--                    </div>-->
                 <!--                    &lt;!&ndash;          <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>&ndash;&gt;-->
                 <!--                </div>-->
-                <button (click)="login()" class="w-full" icon="pi pi-sign-in" label="Sign In with Google" pButton pRipple></button>
+                <button (click)="login()" class="w-full" icon="pi pi-google" label="Sign In with Google" pButton pRipple></button>
             </div>
             <div *ngIf="(user$ | async) as user">
                 <button (click)="logout()" class="w-full" icon="pi pi-sign-out" label="Sign Out" pButton pRipple></button>
