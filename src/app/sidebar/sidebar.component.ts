@@ -129,12 +129,14 @@ export class SidebarComponent implements OnInit {
     processData(results: { files: File[]; folders: Folder[]; }): any {
         const {files, folders} = results;
 
-        let directory: { label: string; icon: string; items?: any; }[] = [];
+        let directory: { label: string; icon: string; items?: any; name: string; id: number; content?: string, command?: () => void }[] = [];
 
         folders.forEach((folder: Folder) => {
             directory.push({
                 label: folder.name,
                 icon: 'pi pi-fw pi-folder',
+                name: folder.name,
+                id: folder.id,
                 items: this.processData({
                     files: folder.files,
                     folders: folder.subfolders
@@ -146,6 +148,12 @@ export class SidebarComponent implements OnInit {
             directory.push({
                 label: file.name,
                 icon: 'pi pi-fw pi-file',
+                name: file.name,
+                id: file.id,
+                content: file.content,
+                command: () => {
+                    this.layoutService.updateEditorHTML({content: file.content, id: file.id, name: file.name});
+                }
             })
         });
 

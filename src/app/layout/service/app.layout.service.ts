@@ -92,6 +92,13 @@ export class LayoutService {
         this.updateSidebarDirectoryItemsSub.next(newStatus);
     }
 
+    private updateEditorHTMLSub = new BehaviorSubject<any>({});
+    updateEditorHTML$ = this.updateEditorHTMLSub.asObservable();
+
+    updateEditorHTML(args: any) {
+        this.updateEditorHTMLSub.next(args);
+    }
+
     private editorSelectedText = new BehaviorSubject<string>('');
     editorSelectedTextObservable$ = this.editorSelectedText.asObservable();
 
