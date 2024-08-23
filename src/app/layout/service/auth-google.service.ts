@@ -48,13 +48,14 @@ export class AuthGoogleService {
             scope: 'profile email openid',
             // responseType: 'code token',
             // dummyClientSecret: 'secret',
-            showDebugInformation: true,
+            // showDebugInformation: true,
             // URL of the client's logout redirect URI (where the OAuth2 provider will redirect after logout)
             postLogoutRedirectUri: window.location.origin,
             // Enable OIDC (OpenID Connect)
-            // oidc: true,
-            // useSilentRefresh: true,
-            // requireHttps: true,
+            oidc: true,
+            useSilentRefresh: true,
+            requireHttps: true,
+            sessionChecksEnabled: true,
         };
 
         this.oAuthService.configure(authConfig);
@@ -79,7 +80,7 @@ export class AuthGoogleService {
                 email: profile['email'],
                 imageUrl: profile['picture'],
             }
-            // this.userProfileSubject.next(userProfile);
+            this.userProfileSubject.next(userProfile);
             return userProfile;
         }
         return null;
