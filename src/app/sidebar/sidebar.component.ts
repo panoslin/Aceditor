@@ -84,7 +84,14 @@ export class SidebarComponent implements OnInit {
             if (profile) {
                 this.fetchRoot().subscribe({
                     next: (results) => {
-                        this.model = this.processData(results);
+                        const directory = this.processData(results);
+                        this.model = [
+                            {
+                                label: 'Home',
+                                icon: 'pi pi-fw pi-home',
+                                items: directory
+                            }
+                        ]
                     },
                     error: (err) => {
                         this.layoutService.sendMessage({
