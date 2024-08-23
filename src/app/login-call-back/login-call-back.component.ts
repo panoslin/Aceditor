@@ -1,7 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {AuthGoogleService} from "@src/app/layout/service/auth-google.service";
 import {Router} from "@angular/router";
-import {AuthBackendService} from "@src/app/layout/service/auth-backend.service";
+import {DataService} from "@src/app/layout/service/data.service";
 import {SkeletonModule} from "primeng/skeleton";
 import {HttpClient} from "@angular/common/http";
 import {LayoutService} from "@src/app/layout/service/app.layout.service";
@@ -19,7 +19,7 @@ export class LoginCallBackComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private authBackendService: AuthBackendService,
+        private authBackendService: DataService,
         private http: HttpClient,
         private layoutService: LayoutService
     ) {

@@ -85,6 +85,13 @@ export class LayoutService {
         this.chatMsgDialogVisible.next(newStatus);
     }
 
+    private updateSidebarDirectoryItemsSub = new BehaviorSubject<any>({});
+    updateSidebarDirectoryItems$ = this.updateSidebarDirectoryItemsSub.asObservable();
+
+    updateSidebarDirectoryItems(newStatus: any) {
+        this.updateSidebarDirectoryItemsSub.next(newStatus);
+    }
+
     private editorSelectedText = new BehaviorSubject<string>('');
     editorSelectedTextObservable$ = this.editorSelectedText.asObservable();
 

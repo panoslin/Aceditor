@@ -80,6 +80,9 @@ export class SidebarComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.layoutService.updateSidebarDirectoryItems$.subscribe((items) => {
+            this.model[0]?.items?.push(items);
+        })
         this.authService.userProfile$.subscribe((profile) => {
             if (profile) {
                 this.fetchRoot().subscribe({

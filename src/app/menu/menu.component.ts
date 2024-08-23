@@ -13,13 +13,15 @@ import {DropdownModule} from "primeng/dropdown";
 import {FormsModule} from "@angular/forms";
 import {Ripple} from "primeng/ripple";
 import {AuthGoogleService, UserProfile} from "@src/app/layout/service/auth-google.service";
+import {MenuModule} from "primeng/menu";
+import {DataService} from "@src/app/layout/service/data.service";
 
 
 @Component({
     selector: 'app-menu',
     templateUrl: './menu.component.html',
     standalone: true,
-    imports: [RouterLink, NgClass, MenubarModule, DialogModule, ButtonModule, InputTextModule, SplitButtonModule, CheckboxModule, DropdownModule, FormsModule, Ripple, AsyncPipe, NgIf, NgOptimizedImage,],
+    imports: [RouterLink, NgClass, MenubarModule, DialogModule, ButtonModule, InputTextModule, SplitButtonModule, CheckboxModule, DropdownModule, FormsModule, Ripple, AsyncPipe, NgIf, NgOptimizedImage, MenuModule,],
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./menu.component.scss']
 })
@@ -45,8 +47,45 @@ export class MenuComponent {
     protected authDialogVisible: boolean = false;
     protected AISidebarVisible: boolean = false;
     password?: string;
+    items: MenuItem[] = [
+        {
+            label: 'New',
+            items: [
+                {
+                    label: 'File',
+                    icon: 'pi pi-file',
+                    command: () => {
+                        this.newFileDialogVisible = true;
+                    }
+                },
+                {
+                    label: 'Folder',
+                    icon: 'pi pi-folder',
+                    command: () => {
+                        this.newFolderDialogVisible = true;
+                    }
+                }
+            ],
+        },
+        {
+            label: 'Manage',
+            items: [
+                {label: 'Custom Prompts (TODO)', icon: 'pi pi-face-smile'},
+            ]
+        }
 
-    constructor(public layoutService: LayoutService) {
+    ];
+
+    newFileDialogVisible: boolean = false;
+    newFolderDialogVisible: boolean = false;
+    newFileName: string = '';
+    newFolderName: string = '';
+
+
+    constructor(
+        public layoutService: LayoutService,
+        private dataService: DataService,
+    ) {
         const userSettings = localStorage.getItem('userSettings');
         if (userSettings !== null) {
             const settings = JSON.parse(userSettings);
@@ -112,5 +151,78 @@ export class MenuComponent {
 
     protected hideAuthDialog() {
         this.authDialogVisible = false;
+    }
+
+    createNewFile() {
+        if (!this.newFileName) {
+            this.layoutService.sendMessage({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Please enter a file name'
+            })
+        } else {
+            this.dataService.createFile(this.newFileName, this.authService.getIdToken()).subscribe({
+                next: (result) => {
+                    this.layoutService.sendMessage({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: `File  ${result.name} created successfully`
+                    })
+                    this.layoutService.updateSidebarDirectoryItems({
+                        label: this.newFileName,
+                        icon: 'pi pi-file',
+                        name: result.name,
+                        id: result.id,
+                        content: result.content,
+                    })
+                    this.newFileName = '';
+                },
+                error: (err) => {
+                    this.layoutService.sendMessage({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Error on API requests: \n' + err.message
+                    })
+                }
+            });
+
+        }
+        this.newFileDialogVisible = false
+    }
+
+    createNewFolder() {
+        if (!this.newFolderName) {
+            this.layoutService.sendMessage({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Please enter a folder name'
+            })
+        } else {
+            this.dataService.createFolder(this.newFolderName, this.authService.getIdToken()).subscribe({
+                next: (result) => {
+                    this.layoutService.sendMessage({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: `Folder ${result.name} created successfully`
+                    })
+                    this.layoutService.updateSidebarDirectoryItems({
+                        label: this.newFolderName,
+                        icon: 'pi pi-folder-open',
+                        name: result.name,
+                        id: result.id,
+                    })
+                    this.newFolderName = '';
+                },
+                error: (err) => {
+                    this.layoutService.sendMessage({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Error on API requests: \n' + err.message
+                    })
+                }
+            });
+
+        }
+        this.newFolderDialogVisible = false
     }
 }
