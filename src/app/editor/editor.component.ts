@@ -1,4 +1,13 @@
-import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    OnInit,
+    Renderer2,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import {EditorModule} from 'primeng/editor';
 import {FormsModule} from '@angular/forms';
 import Quill, {Bounds} from 'quill';
@@ -8,14 +17,15 @@ import {MenubarModule} from "primeng/menubar";
 import {MenuItem} from "primeng/api";
 import {Button} from "primeng/button";
 import {Ripple} from "primeng/ripple";
-import {NgClass, NgIf} from "@angular/common";
+import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {InputTextModule} from "primeng/inputtext";
 import {SplitButtonModule} from "primeng/splitbutton";
+import {TabViewChangeEvent, TabViewCloseEvent, TabViewModule} from "primeng/tabview";
 
 @Component({
     selector: 'app-editor',
     standalone: true,
-    imports: [FormsModule, EditorModule, OverlayPanelModule, MenubarModule, Button, Ripple, NgClass, NgIf, InputTextModule, SplitButtonModule],
+    imports: [FormsModule, EditorModule, OverlayPanelModule, MenubarModule, Button, Ripple, NgClass, NgIf, InputTextModule, SplitButtonModule, TabViewModule, NgForOf],
     templateUrl: './editor.component.html',
     styleUrls: ['./editor.component.scss'],
     encapsulation: ViewEncapsulation.None,
@@ -29,83 +39,16 @@ export class EditorComponent implements AfterViewInit, OnInit {
 
     placeholder: string = `<h1 class="ql-align-center">Quill Rich Text Editor</h1><p></p><p>Quill is a feature-rich WYSIWYG editor that offers a wide range of functionalities. Here are some samples of what the Quill editor can do: </p><p> 1. <strong>Text Formatting:</strong> Quill allows users to easily format text by providing options for <em>bold, italic, underline, strikethrough,</em> and more. ✍️ </p><p> 2. <strong>Lists:</strong> It supports both <em>ordered and unordered lists,</em> making it easy to create structured content. 📝 </p><p> 3. <strong>Embedding Images:</strong> Users can insert images directly into the editor and adjust their size and alignment. 🖼️ </p><p> 4. <strong>Links:</strong> Quill enables users to create hyperlinks within the text for easy navigation to external resources. 🔗 </p><p> 5. <strong>Custom Styles:</strong> Developers can create custom styles to provide users with predefined formatting options. 🎨</p>`;
 
-    // toolbarOptions = [
-    //   // [{'bold': ['bold', 'italic', 'underline', 'strike']}],
-    //   [
-    //     'bold',
-    //     'italic',
-    //     'underline',
-    //     'strike'
-    //   ],        // toggled buttons
-    //   [
-    //     // 'blockquote',
-    //     'code-block'
-    //   ],
-    //   [
-    //     'link',
-    //     'image',
-    //     'video',
-    //     'formula'
-    //   ],
-    //   // [
-    //   //   { 'header': 1 },
-    //   //   { 'header': 2 }
-    //   // ],               // custom button values
-    //   [
-    //     {'list': 'ordered'},
-    //     {'list': 'bullet'},
-    //     {'list': 'check'}
-    //   ],
-    //   // [
-    //   //   { 'script': 'sub'},
-    //   //   { 'script': 'super' }
-    //   // ],      // superscript/subscript
-    //   // [
-    //   //   { 'indent': '-1'},
-    //   //   { 'indent': '+1' }
-    //   // ],          // outdent/indent
-    //   // [
-    //   //   { 'direction': 'rtl' }
-    //   // ],                         // text direction
-    //   // [
-    //   //   {
-    //   //     'size': ['small', false, 'large', 'huge']
-    //   //   }
-    //   // ],  // custom dropdown
-    //   [
-    //     {
-    //       'header':
-    //         [1, 2, 3, 4, 5, 6, false]
-    //     }
-    //   ],
-    //   [
-    //     {'color': []},
-    //     {
-    //       'background': []
-    //     }
-    //   ],          // dropdown with defaults from theme
-    //   [
-    //     {
-    //       'font': []
-    //     }
-    //   ],
-    //   [
-    //     {
-    //       'align': []
-    //     }
-    //   ],
-    //   [
-    //     'clean'
-    //   ]                                         // remove formatting button
-    // ];
-
     toolbarItems!: MenuItem[];
     private savedRange!: any;
     private editorHasFocus: boolean = true;
+    tabs: any = [];
+    activeIndex: number = 0;
 
     constructor(
         protected layoutService: LayoutService,
-        private renderer: Renderer2
+        private renderer: Renderer2,
+        private cdr: ChangeDetectorRef,
     ) {
         this.toolbarItems = this.layoutService.toolbarItems;
         this.layoutService.generatedTextObservable$.subscribe(text => {
@@ -120,6 +63,26 @@ export class EditorComponent implements AfterViewInit, OnInit {
 
     ngOnInit(): void {
         this.toolbar = this.layoutService.getToolbarElementRef();
+        this.layoutService.updateEditorHTML$.subscribe((args: any) => {
+            // args != {}
+            if (!(args && Object.keys(args).length === 0 && args.constructor === Object)) {
+                const newHTML = args.content;
+                const fileId = args.id;
+                const fileName = args.name;
+                const index = this.tabs.findIndex((tab: any) => tab.fileId === fileId);
+                // fileId not in tabs
+                if (index === -1) {
+                    const localStorageHTML = localStorage.getItem(`editorHTML-${fileId}`);
+                    this.editor.nativeElement.querySelector('.ql-editor').innerHTML = localStorageHTML || newHTML;
+                    this.tabs.push({title: fileName, content: localStorageHTML || newHTML, fileId: fileId});
+                    this.cdr.detectChanges();
+                    this.activeIndex = this.tabs.length - 1;
+                } else {
+                    this.activeIndex = index;
+                    this.editor.nativeElement.querySelector('.ql-editor').innerHTML = this.tabs[this.activeIndex].content;
+                }
+            }
+        })
     }
 
     ngAfterViewInit() {
@@ -144,14 +107,13 @@ export class EditorComponent implements AfterViewInit, OnInit {
         // @ts-ignore
         Quill.register(Size, true);
 
-        // load editor content
-        if (localStorage.getItem('editorHTML') !== null) {
-            this.editor.nativeElement.querySelector('.ql-editor').innerHTML = localStorage.getItem('editorHTML');
-        } else {
-            this.editor.nativeElement.querySelector('.ql-editor').innerHTML = `${this.placeholder}`;
-
-        }
-
+        const localStorageHTML = localStorage.getItem('editorHTML--1');
+        this.editor.nativeElement.querySelector('.ql-editor').innerHTML = localStorageHTML || this.placeholder;
+        this.tabs.push({
+            title: 'LocalDraft',
+            content: this.editor.nativeElement.querySelector('.ql-editor').innerHTML,
+            fileId: -1
+        });
 
         this.quill.focus();
 
@@ -205,11 +167,9 @@ export class EditorComponent implements AfterViewInit, OnInit {
         });
 
         this.quill.on('text-change', (delta, oldDelta, source) => {
-            this.applyEditorStyle()
-        });
-
-        this.quill.on('text-change', (delta, oldDelta, source) => {
-            localStorage.setItem('editorHTML', this.editor.nativeElement.querySelector('.ql-editor').innerHTML);
+            // TODO: OPTIMIZE
+            this.applyEditorStyle();
+            localStorage.setItem(`editorHTML-${this.tabs[this.activeIndex].fileId}`, this.editor.nativeElement.querySelector('.ql-editor').innerHTML);
         });
     }
 
@@ -219,5 +179,24 @@ export class EditorComponent implements AfterViewInit, OnInit {
             this.renderer.setStyle(p, 'line-height', '1.5');
             this.renderer.setStyle(p, 'margin', '0 0 1rem 0');
         });
+    }
+
+    onTabClose($event: TabViewCloseEvent) {
+        // todo: save close tab
+        // remove tab
+        this.tabs.splice($event.index, 1);
+        if (this.tabs.length > 0) {
+            this.activeIndex = Math.max(0, $event.index - 1);
+            this.editor.nativeElement.querySelector('.ql-editor').innerHTML = this.tabs[this.activeIndex].content;
+        } else {
+            this.activeIndex = -1;
+            this.editor.nativeElement.querySelector('.ql-editor').innerHTML = '';
+        }
+    }
+
+    onTabChange($event: TabViewChangeEvent) {
+        this.activeIndex = $event.index;
+        const localStorageHTML = localStorage.getItem(`editorHTML-${this.tabs[this.activeIndex].fileId}`);
+        this.editor.nativeElement.querySelector('.ql-editor').innerHTML = localStorageHTML || this.tabs[this.activeIndex].content;
     }
 }

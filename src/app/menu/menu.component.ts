@@ -166,7 +166,7 @@ export class MenuComponent {
                     this.layoutService.sendMessage({
                         severity: 'success',
                         summary: 'Success',
-                        detail: `File  ${result.name} created successfully`
+                        detail: `File  "${result.name}" created successfully`
                     })
                     this.layoutService.updateSidebarDirectoryItems({
                         label: this.newFileName,
@@ -174,6 +174,13 @@ export class MenuComponent {
                         name: result.name,
                         id: result.id,
                         content: result.content,
+                        command: () => {
+                            this.layoutService.updateEditorHTML({
+                                content: result.content,
+                                id: result.id,
+                                name: result.name
+                            });
+                        }
                     })
                     this.newFileName = '';
                 },
@@ -203,7 +210,7 @@ export class MenuComponent {
                     this.layoutService.sendMessage({
                         severity: 'success',
                         summary: 'Success',
-                        detail: `Folder ${result.name} created successfully`
+                        detail: `Folder "${result.name}" created successfully`
                     })
                     this.layoutService.updateSidebarDirectoryItems({
                         label: this.newFolderName,
