@@ -21,6 +21,8 @@ import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {InputTextModule} from "primeng/inputtext";
 import {SplitButtonModule} from "primeng/splitbutton";
 import {TabViewChangeEvent, TabViewCloseEvent, TabViewModule} from "primeng/tabview";
+import {DataService} from "@src/app/layout/service/data.service";
+import {AuthGoogleService} from "@src/app/layout/service/auth-google.service";
 
 @Component({
     selector: 'app-editor',
@@ -49,6 +51,8 @@ export class EditorComponent implements AfterViewInit, OnInit {
         protected layoutService: LayoutService,
         private renderer: Renderer2,
         private cdr: ChangeDetectorRef,
+        private dataService: DataService,
+        private authGoogleService: AuthGoogleService
     ) {
         this.toolbarItems = this.layoutService.toolbarItems;
         this.layoutService.generatedTextObservable$.subscribe(text => {
@@ -182,7 +186,31 @@ export class EditorComponent implements AfterViewInit, OnInit {
     }
 
     onTabClose($event: TabViewCloseEvent) {
-        // todo: save close tab
+        // save close tab if not local draft
+        if (this.tabs[$event.index].fileId !== -1) {
+            const localStorageHTML = (localStorage.getItem(`editorHTML-${this.tabs[$event.index].fileId}`)) as string;
+            this.dataService.saveFileContent(
+                this.tabs[$event.index].fileId,
+                localStorageHTML,
+                this.tabs[$event.index].title,
+                this.authGoogleService.getIdToken()
+            ).subscribe({
+                next: (response) => {
+                    this.layoutService.sendMessage({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: `File saved: "${response.name}"`
+                    })
+                },
+                error: (err) => {
+                    this.layoutService.sendMessage({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: `Error on API requests: \n${err.message}`
+                    })
+                }
+            });
+        }
         // remove tab
         this.tabs.splice($event.index, 1);
         if (this.tabs.length > 0) {
