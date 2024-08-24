@@ -2,7 +2,7 @@ import {
     AfterViewInit,
     ChangeDetectorRef,
     Component,
-    ElementRef,
+    ElementRef, OnDestroy,
     OnInit,
     Renderer2,
     ViewChild,
@@ -32,7 +32,7 @@ import {AuthGoogleService} from "@src/app/layout/service/auth-google.service";
     styleUrls: ['./editor.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-export class EditorComponent implements AfterViewInit, OnInit {
+export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
     @ViewChild('editor', {static: true}) editor!: ElementRef;
     @ViewChild('op') overlayPanel!: OverlayPanel;
 
@@ -64,8 +64,29 @@ export class EditorComponent implements AfterViewInit, OnInit {
             this.quill.clipboard.dangerouslyPasteHTML(this.savedRange.index, text)
         });
     }
-
+    ngOnDestroy() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+        }
+    }
+    private intervalId: any;
+    saveFilesOnTabs() {
+        // for each tab call saveFileContent
+        this.tabs.forEach((tab: any) => {
+            // excluding fileId === -1
+            if (tab.fileId === -1) return;
+            this.dataService.saveFileContent(
+                tab.fileId,
+                (localStorage.getItem(`editorHTML-${tab.fileId}`)) as string,
+                tab.title,
+                this.authGoogleService.getIdToken()
+            ).subscribe();
+        })
+    }
     ngOnInit(): void {
+        this.intervalId = setInterval(() => {
+            this.saveFilesOnTabs();
+        }, 5000);
         this.toolbar = this.layoutService.getToolbarElementRef();
         this.layoutService.updateEditorHTML$.subscribe((args: any) => {
             // args != {}
