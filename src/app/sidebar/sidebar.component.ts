@@ -1,5 +1,5 @@
 import {NgFor, NgIf} from '@angular/common';
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 
 import {MenuItem} from 'primeng/api';
 import {PanelMenuModule} from 'primeng/panelmenu';
@@ -12,6 +12,12 @@ import {HttpClient} from "@angular/common/http";
 import {forkJoin, Observable} from "rxjs";
 import {environment} from "@src/environments/environment";
 import {AuthGoogleService} from "@src/app/layout/service/auth-google.service";
+import {ContextMenu, ContextMenuModule} from "primeng/contextmenu";
+import {Button} from "primeng/button";
+import {DialogModule} from "primeng/dialog";
+import {InputTextModule} from "primeng/inputtext";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {DataService} from "@src/app/layout/service/data.service";
 
 interface User {
     id: number;
@@ -46,18 +52,40 @@ interface Folder {
     selector: 'app-sidebar',
     templateUrl: './sidebar.component.html',
     standalone: true,
-    imports: [NgFor, NgIf, PanelMenuModule, BadgeModule, Ripple, SidebarItem]
+    imports: [NgFor, NgIf, PanelMenuModule, BadgeModule, Ripple, SidebarItem, ContextMenuModule, Button, DialogModule, InputTextModule, ReactiveFormsModule, FormsModule]
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, AfterViewInit {
     apiEndpoint = environment.apiEndpoint;
+    @ViewChild('cm') cm!: ContextMenu;
 
-    model: MenuItem[] = [];
+    model: any[] = [];
+    items: MenuItem[] = [
+        {
+            label: 'New File',
+            icon: 'pi pi-file',
+            command: () => {
+                this.newFileDialogVisible = true;
+            }
+        },
+        {
+            label: 'New Folder',
+            icon: 'pi pi-folder',
+            command: () => {
+                this.newFolderDialogVisible = true;
+            }
+        }
+    ];
+    newFileDialogVisible: boolean = false;
+    newFileName: string = '';
+    newFolderDialogVisible: boolean = false;
+    newFolderName: string = '';
 
     constructor(
         public layoutService: LayoutService,
         public authService: AuthGoogleService,
         public el: ElementRef,
-        private http: HttpClient
+        private http: HttpClient,
+        private dataService: DataService
     ) {
     }
 
@@ -79,9 +107,32 @@ export class SidebarComponent implements OnInit {
         });
     }
 
+
+    insertNewItemtoModel(model: any, item: MenuItem): boolean {
+        // DFS model and update items
+        // insert item to the MenuItem from model with id === itesm.parentId
+        if (model.id === item['parentId']) {
+            if (!model['items']) {
+                model['items'] = [];
+            }
+            model['items'].push(item);
+            return true;
+        }
+        for (let i = 0; model.items && model.items.length && i < model.items.length; i++) {
+            if (this.insertNewItemtoModel(model.items[i], item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     ngOnInit() {
+        this.layoutService.sideBarContextMenu = this.cm;
         this.layoutService.updateSidebarDirectoryItems$.subscribe((items) => {
-            this.model[0]?.items?.push(items);
+            if (items && Object.keys(items).length === 0 && items.constructor === Object) {
+                return;
+            }
+            this.insertNewItemtoModel(this.model[0], items);
         })
         this.authService.userProfile$.subscribe((profile) => {
             if (profile) {
@@ -92,6 +143,7 @@ export class SidebarComponent implements OnInit {
                             {
                                 label: 'Home',
                                 icon: 'pi pi-fw pi-home',
+                                id: null,
                                 items: directory
                             }
                         ]
@@ -125,11 +177,23 @@ export class SidebarComponent implements OnInit {
         })
     }
 
+    ngAfterViewInit() {
+        this.layoutService.sideBarContextMenu = this.cm;
+    }
 
-    processData(results: { files: File[]; folders: Folder[]; }): any {
+    processData(results: { files: File[]; folders: Folder[]; }, parent: number | null = null): any {
         const {files, folders} = results;
 
-        let directory: { label: string; icon: string; items?: any; name: string; id: number; content?: string, command?: () => void }[] = [];
+        let directory: {
+            label: string;
+            icon: string;
+            items?: any;
+            name: string;
+            id: number;
+            content?: string,
+            parentId?: number | null,
+            command?: () => void
+        }[] = [];
 
         folders.forEach((folder: Folder) => {
             directory.push({
@@ -137,10 +201,14 @@ export class SidebarComponent implements OnInit {
                 icon: 'pi pi-fw pi-folder',
                 name: folder.name,
                 id: folder.id,
-                items: this.processData({
-                    files: folder.files,
-                    folders: folder.subfolders
-                })
+                parentId: parent,
+                items: this.processData(
+                    {
+                        files: folder.files,
+                        folders: folder.subfolders
+                    },
+                    folder.id
+                )
             })
         });
 
@@ -150,6 +218,7 @@ export class SidebarComponent implements OnInit {
                 icon: 'pi pi-fw pi-file',
                 name: file.name,
                 id: file.id,
+                parentId: parent,
                 content: file.content,
                 command: () => {
                     this.layoutService.updateEditorHTML({content: file.content, id: file.id, name: file.name});
@@ -158,5 +227,100 @@ export class SidebarComponent implements OnInit {
         });
 
         return directory;
+    }
+
+    onContextMenu($event: MouseEvent, item: MenuItem) {
+        this.layoutService.sideBarContextMenuSelectedItem = item;
+        this.cm.target = $event.currentTarget as HTMLElement;
+        this.cm.show($event);
+    }
+
+    onHide() {
+        // this.layoutService.sideBarContextMenuSelectedItem = undefined;
+    }
+
+    createNewFile() {
+        if (!this.newFileName) {
+            this.layoutService.sendMessage({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Please enter a file name'
+            })
+        } else {
+            const item = this.layoutService.sideBarContextMenuSelectedItem;
+            const FolderId = item?.['icon'] === 'pi pi-fw pi-folder' ? item?.['id'] : item?.['parentId'];
+            this.dataService.createFile(this.newFileName, this.authService.getIdToken(), FolderId).subscribe({
+                next: (result) => {
+                    this.layoutService.sendMessage({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: `File  "${result.name}" created successfully`
+                    })
+                    this.layoutService.updateSidebarDirectoryItems({
+                        label: this.newFileName,
+                        icon: 'pi pi-file',
+                        name: result.name,
+                        id: result.id,
+                        content: result.content,
+                        parentId: FolderId,
+                        command: () => {
+                            this.layoutService.updateEditorHTML({
+                                content: result.content,
+                                id: result.id,
+                                name: result.name
+                            });
+                        }
+                    })
+                    this.newFileName = '';
+                },
+                error: (err) => {
+                    this.layoutService.sendMessage({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Error on API requests: \n' + err.message
+                    })
+                }
+            });
+        }
+        this.newFileDialogVisible = false
+    }
+
+    createNewFolder() {
+        if (!this.newFolderName) {
+            this.layoutService.sendMessage({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Please enter a folder name'
+            })
+        } else {
+            const item = this.layoutService.sideBarContextMenuSelectedItem;
+            const FolderId = item?.['icon'] === 'pi pi-fw pi-folder' ? item?.['id'] : item?.['parentId'];
+            this.dataService.createFolder(this.newFolderName, this.authService.getIdToken(), FolderId).subscribe({
+                next: (result) => {
+                    this.layoutService.sendMessage({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: `Folder "${result.name}" created successfully`
+                    })
+                    this.layoutService.updateSidebarDirectoryItems({
+                        label: this.newFolderName,
+                        icon: 'pi pi-fw pi-folder',
+                        name: result.name,
+                        id: result.id,
+                        parentId: FolderId,
+                    })
+                    this.newFolderName = '';
+                },
+                error: (err) => {
+                    this.layoutService.sendMessage({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Error on API requests: \n' + err.message
+                    })
+                }
+            });
+
+        }
+        this.newFolderDialogVisible = false
     }
 }

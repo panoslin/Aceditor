@@ -14,28 +14,42 @@ import {NgClass, NgFor, NgIf} from '@angular/common';
     template: `
       <ng-container>
           <div *ngIf="root && item.visible !== false" class="layout-menuitem-root-text">{{ item.label }}</div>
-          <a *ngIf="(!item.routerLink || item.items) && item.visible !== false" [attr.href]="item.url"
+          <a *ngIf="(!item.routerLink || item.items) && item.visible !== false"
+             [attr.href]="item.url"
              (click)="itemClick($event)"
-             [ngClass]="item.class" [attr.target]="item.target" tabindex="0" pRipple>
+             [ngClass]="item.class"
+             [attr.target]="item.target"
+             tabindex="0"
+             pRipple
+             (contextmenu)="onContextMenu($event, item)"
+          >
               <i [ngClass]="item.icon" class="layout-menuitem-icon"></i>
               <span class="layout-menuitem-text">{{ item.label }}</span>
-              <i class="pi pi-fw pi-angle-down layout-submenu-toggler" *ngIf="item.items"></i>
+              <i class="pi pi-fw pi-angle-down layout-submenu-toggler" *ngIf="item.items && item.items.length > 0"></i>
           </a>
-          <a *ngIf="(item.routerLink && !item.items) && item.visible !== false" (click)="itemClick($event)"
+          <a *ngIf="(item.routerLink && !item.items) && item.visible !== false"
+             (click)="itemClick($event)"
              [ngClass]="item.class"
-             [routerLink]="item.routerLink" routerLinkActive="active-route"
+             [routerLink]="item.routerLink"
+             routerLinkActive="active-route"
              [routerLinkActiveOptions]="item.routerLinkActiveOptions||{ paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' }"
              [fragment]="item.fragment" [queryParamsHandling]="item.queryParamsHandling"
              [preserveFragment]="item.preserveFragment"
              [skipLocationChange]="item.skipLocationChange" [replaceUrl]="item.replaceUrl" [state]="item.state"
              [queryParams]="item.queryParams"
-             [attr.target]="item.target" tabindex="0" pRipple>
+             [attr.target]="item.target"
+             tabindex="0"
+             pRipple
+             (contextmenu)="onContextMenu($event, item)"
+          >
               <i [ngClass]="item.icon" class="layout-menuitem-icon"></i>
               <span class="layout-menuitem-text">{{ item.label }}</span>
               <i class="pi pi-fw pi-angle-down layout-submenu-toggler" *ngIf="item.items"></i>
           </a>
 
-          <ul *ngIf="item.items && item.visible !== false" [@children]="submenuAnimation">
+          <ul *ngIf="item.items && item.visible !== false"
+              [@children]="submenuAnimation"
+          >
               <ng-template ngFor let-child let-i="index" [ngForOf]="item.items">
                   <li app-menuitem [item]="child" [index]="i" [parentKey]="key" [class]="child.badgeClass"></li>
               </ng-template>
@@ -157,5 +171,11 @@ export class SidebarItem implements OnInit, OnDestroy {
         if (this.menuResetSubscription) {
             this.menuResetSubscription.unsubscribe();
         }
+    }
+
+    onContextMenu($event: MouseEvent, item: any) {
+        this.layoutService.sideBarContextMenuSelectedItem = item;
+        this.layoutService.sideBarContextMenu.target = $event.currentTarget as HTMLElement;
+        this.layoutService.sideBarContextMenu.show($event);
     }
 }

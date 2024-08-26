@@ -1,6 +1,38 @@
 <ul class="layout-menu">
-    <ng-container *ngFor="let item of model; let i = index;">
-        <li *ngIf="!item.separator" [index]="i" [item]="item" [root]="true" app-menuitem></li>
+    <ng-container *ngFor="let item of model; let i = index;" (contextmenu)="onContextMenu($event, item)">
+        <li *ngIf="!item.separator"  [index]="i" [item]="item" [root]="true" app-menuitem></li>
         <li *ngIf="item.separator" class="menu-separator"></li>
     </ng-container>
+
+    <p-contextMenu #cm [model]="items" appendTo="body" (onHide)="onHide()">
+        <ng-template pTemplate="item" let-item>
+            <a pRipple class="flex align-items-center p-menuitem-link">
+                <span class="item.icon"></span>
+                <span class="ml-2">{{ item.label }}</span>
+                <p-badge *ngIf="item.badge" class="ml-auto" [value]="item.badge" />
+                <span *ngIf="item.shortcut" class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">
+                    {{ item.shortcut }}
+                </span>
+                <i *ngIf="item.items" class="pi pi-angle-right ml-auto"></i>
+            </a>
+        </ng-template>
+    </p-contextMenu>
+    <p-dialog header="New File" [modal]="true" dismissableMask="true" [(visible)]="newFileDialogVisible" [style]="{ width: '25rem' }" appendTo="body">
+        <div class="flex align-items-center gap-3 mb-3">
+            <input pInputText [(ngModel)]="newFileName"  class="flex-auto" autocomplete="off" />
+        </div>
+        <div class="flex justify-content-end gap-2">
+            <p-button label="Cancel" severity="secondary" (onClick)="newFileDialogVisible = false" />
+            <p-button label="Save" (onClick)="createNewFile()" />
+        </div>
+    </p-dialog>
+    <p-dialog header="New Folder" [modal]="true" dismissableMask="true" [(visible)]="newFolderDialogVisible" [style]="{ width: '25rem' }" appendTo="body">
+        <div class="flex align-items-center gap-3 mb-3">
+            <input pInputText [(ngModel)]="newFolderName"  class="flex-auto" autocomplete="off" />
+        </div>
+        <div class="flex justify-content-end gap-2">
+            <p-button label="Cancel" severity="secondary" (onClick)="newFolderDialogVisible = false" />
+            <p-button label="Save" (onClick)="createNewFolder()" />
+        </div>
+    </p-dialog>
 </ul>

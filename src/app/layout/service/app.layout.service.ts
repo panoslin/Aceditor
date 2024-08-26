@@ -4,6 +4,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "@src/environments/environment";
 import {MenuItem, MenuItemCommandEvent} from "primeng/api";
 import OpenAI from 'openai';
+import {ContextMenu} from "primeng/contextmenu";
 
 export interface AppConfig {
     inputStyle: string;
@@ -59,6 +60,8 @@ export class LayoutService {
 
     private callSendChatMsgDialogSubject = new Subject<void>();
     callSendChatMsgDialogObservable$ = this.callSendChatMsgDialogSubject.asObservable();
+    sideBarContextMenu!: ContextMenu;
+    sideBarContextMenuSelectedItem?: MenuItem;
 
     callSendChatMsgDialog() {
         this.callSendChatMsgDialogSubject.next();
