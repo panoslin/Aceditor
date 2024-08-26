@@ -221,7 +221,12 @@ export class SidebarComponent implements OnInit, AfterViewInit {
                 parentId: parent,
                 content: file.content,
                 command: () => {
-                    this.layoutService.updateEditorHTML({content: file.content, id: file.id, name: file.name});
+                    this.layoutService.updateEditorHTML({
+                        content: file.content,
+                        id: file.id,
+                        name: file.name,
+                        parent: parent
+                    });
                 }
             })
         });
@@ -267,7 +272,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
                             this.layoutService.updateEditorHTML({
                                 content: result.content,
                                 id: result.id,
-                                name: result.name
+                                name: result.name,
+                                parent: FolderId
                             });
                         }
                     })

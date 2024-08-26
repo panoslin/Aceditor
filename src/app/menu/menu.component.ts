@@ -178,7 +178,8 @@ export class MenuComponent {
                             this.layoutService.updateEditorHTML({
                                 content: result.content,
                                 id: result.id,
-                                name: result.name
+                                name: result.name,
+                                parent: null
                             });
                         }
                     })

@@ -66,12 +66,16 @@ export class DataService {
         }
     }
 
-    saveFileContent(id: number, content: string, name: string, token: string): Observable<any> {
+    saveFileContent(id: number, content: string, name: string, token: string, folder: number | null = null): Observable<any> {
         const url = `${environment.apiEndpoint}/api/files/${id}`
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         });
-        return this.http.put(url, {content: content, name: name}, {headers});
+        if (folder) {
+            return this.http.put(url, {content: content, name: name, folder: {id: folder}}, {headers});
+        } else {
+            return this.http.put(url, {content: content, name: name}, {headers});
+        }
     }
 }

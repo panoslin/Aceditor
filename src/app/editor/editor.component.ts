@@ -79,7 +79,8 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
                 tab.fileId,
                 (localStorage.getItem(`editorHTML-${tab.fileId}`)) as string,
                 tab.title,
-                this.authGoogleService.getIdToken()
+                this.authGoogleService.getIdToken(),
+                tab.parent
             ).subscribe();
         })
     }
@@ -94,12 +95,13 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
                 const newHTML = args.content;
                 const fileId = args.id;
                 const fileName = args.name;
+                const parent = args.parent;
                 const index = this.tabs.findIndex((tab: any) => tab.fileId === fileId);
                 // fileId not in tabs
                 if (index === -1) {
                     const localStorageHTML = localStorage.getItem(`editorHTML-${fileId}`);
                     this.editor.nativeElement.querySelector('.ql-editor').innerHTML = localStorageHTML || newHTML;
-                    this.tabs.push({title: fileName, content: localStorageHTML || newHTML, fileId: fileId});
+                    this.tabs.push({title: fileName, content: localStorageHTML || newHTML, fileId: fileId, parent: parent});
                     this.cdr.detectChanges();
                     this.activeIndex = this.tabs.length - 1;
                 } else {
@@ -137,7 +139,8 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
         this.tabs.push({
             title: 'LocalDraft',
             content: this.editor.nativeElement.querySelector('.ql-editor').innerHTML,
-            fileId: -1
+            fileId: -1,
+            parent: -1
         });
 
         this.quill.focus();
@@ -214,7 +217,8 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
                 this.tabs[$event.index].fileId,
                 localStorageHTML,
                 this.tabs[$event.index].title,
-                this.authGoogleService.getIdToken()
+                this.authGoogleService.getIdToken(),
+                this.tabs[$event.index].parent
             ).subscribe({
                 next: (response) => {
                     this.layoutService.sendMessage({
