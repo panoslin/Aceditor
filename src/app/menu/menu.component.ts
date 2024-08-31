@@ -1,4 +1,4 @@
-import {Component, ElementRef, inject, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, inject, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {LayoutService} from "../layout/service/app.layout.service";
 import {AsyncPipe, NgClass, NgIf, NgOptimizedImage} from '@angular/common';
 import {RouterLink} from '@angular/router';
@@ -15,28 +15,26 @@ import {Ripple} from "primeng/ripple";
 import {AuthGoogleService, UserProfile} from "@src/app/layout/service/auth-google.service";
 import {MenuModule} from "primeng/menu";
 import {DataService} from "@src/app/layout/service/data.service";
+import {AvatarModule} from "primeng/avatar";
 
 
 @Component({
     selector: 'app-menu',
     templateUrl: './menu.component.html',
     standalone: true,
-    imports: [RouterLink, NgClass, MenubarModule, DialogModule, ButtonModule, InputTextModule, SplitButtonModule, CheckboxModule, DropdownModule, FormsModule, Ripple, AsyncPipe, NgIf, NgOptimizedImage, MenuModule,],
+    imports: [RouterLink, NgClass, MenubarModule, DialogModule, ButtonModule, InputTextModule, SplitButtonModule, CheckboxModule, DropdownModule, FormsModule, Ripple, AsyncPipe, NgIf, NgOptimizedImage, MenuModule, AvatarModule,],
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./menu.component.scss']
 })
-export class MenuComponent {
+export class MenuComponent implements OnInit {
     private authService = inject(AuthGoogleService);
     user$ = this.authService.userProfile$;
 
     userProfile!: UserProfile;
 
     @ViewChild('menubutton') menuButton!: ElementRef;
-
     @ViewChild('topbarmenubutton') topbarMenuButton!: ElementRef;
-
     @ViewChild('topbarmenu') menu!: ElementRef;
-
     @ViewChild('toolbar', {static: true}) toolbar!: ElementRef;
 
     settingDialogVisible: boolean = false;
@@ -112,7 +110,7 @@ export class MenuComponent {
     }
 
     ngOnInit(): void {
-        this.layoutService.callToggleAuthDialogObservable$.subscribe(() => {
+        this.layoutService.authDialogDisplay$.subscribe(() => {
             this.toggleAuthDialog();
         })
         this.user$.subscribe(user => {
@@ -168,14 +166,14 @@ export class MenuComponent {
                         summary: 'Success',
                         detail: `File  "${result.name}" created successfully`
                     })
-                    this.layoutService.updateSidebarDirectoryItems({
+                    this.layoutService.insertSidebarDirectoryItems({
                         label: this.newFileName,
                         icon: 'pi pi-file',
                         name: result.name,
                         id: result.id,
                         content: result.content,
                         command: () => {
-                            this.layoutService.updateEditorHTML({
+                            this.layoutService.updateEditorContent({
                                 content: result.content,
                                 id: result.id,
                                 name: result.name,
@@ -213,7 +211,7 @@ export class MenuComponent {
                         summary: 'Success',
                         detail: `Folder "${result.name}" created successfully`
                     })
-                    this.layoutService.updateSidebarDirectoryItems({
+                    this.layoutService.insertSidebarDirectoryItems({
                         label: this.newFolderName,
                         icon: 'pi pi-folder-open',
                         name: result.name,
