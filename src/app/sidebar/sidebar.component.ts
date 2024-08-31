@@ -9,9 +9,9 @@ import {BadgeModule} from "primeng/badge";
 import {Ripple} from "primeng/ripple";
 import {SidebarItem} from "@src/app/sidebar/sidebar.item";
 import {HttpClient} from "@angular/common/http";
-import {forkJoin, Observable} from "rxjs";
+import {forkJoin, Observable, switchMap} from "rxjs";
 import {environment} from "@src/environments/environment";
-import {AuthGoogleService} from "@src/app/layout/service/auth-google.service";
+import {AuthGoogleService, UserProfile} from "@src/app/layout/service/auth-google.service";
 import {ContextMenu, ContextMenuModule} from "primeng/contextmenu";
 import {Button} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
@@ -85,7 +85,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         public authService: AuthGoogleService,
         public el: ElementRef,
         private http: HttpClient,
-        private dataService: DataService
+        private dataService: DataService,
     ) {
     }
 
@@ -100,11 +100,16 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         );
     }
 
-    fetchRoot(): Observable<any> {
-        return forkJoin({
-            files: this.fetchData('files/root'),
-            folders: this.fetchData('folders/root'),
-        });
+    fetchRoot(profile: UserProfile) {
+        // register user if not exists
+        return this.dataService.register(profile.name, profile.email, this.authService.getIdToken()).pipe(
+            switchMap(responseA => {
+                return forkJoin({
+                    files: this.fetchData('files/root'),
+                    folders: this.fetchData('folders/root'),
+                });
+            })
+        );
     }
 
 
@@ -136,8 +141,11 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         })
         this.authService.userProfile$.subscribe((profile) => {
             if (profile) {
-                this.fetchRoot().subscribe({
+                this.fetchRoot(profile).subscribe({
                     next: (results) => {
+                        if (!results) {
+                            return;
+                        }
                         const directory = this.processData(results);
                         this.model = [
                             {

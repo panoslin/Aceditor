@@ -17,8 +17,13 @@ export class DataService {
         return true;
     }
 
-    register(name: string, email: string) {
-
+    register(name: string, email: string, token: string) {
+        const url = `${environment.apiEndpoint}/auth/register`
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        });
+        return this.http.post(url, {username: name, email: email}, {headers});
     }
 
     login(authCode: string, codeVerifier: string) {
