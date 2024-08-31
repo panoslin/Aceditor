@@ -31,7 +31,8 @@
                                 "input": "public"
                             },
                             "src/favicon.ico",
-                            "src/assets"
+                            "src/assets",
+                            "src/silent-refresh.html"
                         ],
                         "styles": [
                             "src/styles.scss"
@@ -102,7 +103,8 @@
                                 "input": "public"
                             },
                             "src/favicon.ico",
-                            "src/assets"
+                            "src/assets",
+                            "src/silent-refresh.html"
                         ],
                         "stylePreprocessorOptions": {
                             "includePaths": [

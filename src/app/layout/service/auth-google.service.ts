@@ -54,13 +54,22 @@ export class AuthGoogleService {
             // Enable OIDC (OpenID Connect)
             oidc: true,
             useSilentRefresh: true,
-            requireHttps: true,
             sessionChecksEnabled: true,
+            silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html', // URL to handle silent refresh
+            timeoutFactor: 0.75, // Refresh before the token expires
+            silentRefreshTimeout: 5000, // Timeout for silent refresh
+            clearHashAfterLogin: true, // Clear URL hash after login
+            nonceStateSeparator: 'semicolon',
+            requireHttps: true,
         };
 
         this.oAuthService.configure(authConfig);
         this.oAuthService.setupAutomaticSilentRefresh();
-        this.oAuthService.loadDiscoveryDocumentAndTryLogin();
+        this.oAuthService.loadDiscoveryDocumentAndTryLogin().then(() => {
+            if (this.oAuthService.hasValidAccessToken()) {
+                this.oAuthService.setupAutomaticSilentRefresh();
+            }
+        });
     }
 
     login() {
