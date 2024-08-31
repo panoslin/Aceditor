@@ -1,7 +1,6 @@
 import {effect, ElementRef, Injectable, signal} from '@angular/core';
-import {BehaviorSubject, catchError, map, Observable, of, Subject} from 'rxjs';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {environment} from "@src/environments/environment";
+import {BehaviorSubject, Subject} from 'rxjs';
+import {HttpClient} from "@angular/common/http";
 import {MenuItem, MenuItemCommandEvent} from "primeng/api";
 import OpenAI from 'openai';
 import {ContextMenu} from "primeng/contextmenu";
@@ -67,52 +66,52 @@ export class LayoutService {
         this.callSendChatMsgDialogSubject.next();
     }
 
-    private callToggleAuthDialogSub = new Subject<void>();
-    callToggleAuthDialogObservable$ = this.callToggleAuthDialogSub.asObservable();
+    private authDialogDisplay = new Subject<void>();
+    authDialogDisplay$ = this.authDialogDisplay.asObservable();
 
-    callToggleAuthDialog() {
-        this.callToggleAuthDialogSub.next();
+    toggleAuthDialog() {
+        this.authDialogDisplay.next();
     }
 
-    private sendMessageSubject = new Subject<SendMessageParams>();
-    sendMessageObservable$ = this.sendMessageSubject.asObservable();
+    private message = new Subject<SendMessageParams>();
+    message$ = this.message.asObservable();
 
     sendMessage(params: SendMessageParams) {
-        this.sendMessageSubject.next(params);
+        this.message.next(params);
     }
 
     private chatMsgDialogVisible = new BehaviorSubject<boolean>(false);
-    chatMsgDialogVisibleObservable$ = this.chatMsgDialogVisible.asObservable();
+    chatMsgDialogVisible$ = this.chatMsgDialogVisible.asObservable();
 
     updateChatMsgDialogVisible(newStatus: boolean) {
         this.chatMsgDialogVisible.next(newStatus);
     }
 
-    private updateSidebarDirectoryItemsSub = new BehaviorSubject<any>({});
-    updateSidebarDirectoryItems$ = this.updateSidebarDirectoryItemsSub.asObservable();
+    private sidebarDirectoryItems = new BehaviorSubject<any>({});
+    sidebarDirectoryItems$ = this.sidebarDirectoryItems.asObservable();
 
-    updateSidebarDirectoryItems(newStatus: any) {
-        this.updateSidebarDirectoryItemsSub.next(newStatus);
+    insertSidebarDirectoryItems(newStatus: any) {
+        this.sidebarDirectoryItems.next(newStatus);
     }
 
-    private updateEditorHTMLSub = new BehaviorSubject<any>({});
-    updateEditorHTML$ = this.updateEditorHTMLSub.asObservable();
+    private editorContent = new BehaviorSubject<any>({});
+    editorContent$ = this.editorContent.asObservable();
 
-    updateEditorHTML(args: any) {
-        this.updateEditorHTMLSub.next(args);
+    updateEditorContent(args: any) {
+        this.editorContent.next(args);
     }
 
     private editorSelectedText = new BehaviorSubject<string>('');
-    editorSelectedTextObservable$ = this.editorSelectedText.asObservable();
+    editorSelectedText$ = this.editorSelectedText.asObservable();
 
     updateEditorSelectedText(text: string) {
         this.editorSelectedText.next(text);
     }
 
     private prompt = new BehaviorSubject<string>('');
-    promptObservable$ = this.prompt.asObservable();
+    prompt$ = this.prompt.asObservable();
 
-    updateprompt(text: string) {
+    updatePrompt(text: string) {
         this.prompt.next(text);
     }
 
@@ -123,7 +122,7 @@ export class LayoutService {
                 // show chat msg dialog
                 this.updateChatMsgDialogVisible(true);
                 // update questions
-                this.updateprompt(
+                this.updatePrompt(
                     'You are a text summarization assistant. ' +
                     'Your task is to summarize the provided sentences and return the summaries formatted as HTML.'
                 );
@@ -137,7 +136,7 @@ export class LayoutService {
                 // show chat msg dialog
                 this.updateChatMsgDialogVisible(true);
                 // update questions
-                this.updateprompt(
+                this.updatePrompt(
                     'You are an expert writing assistant. ' +
                     'Your task is to improve and polish the provided text. ' +
                     'Enhance the clarity, coherence, and style while ensuring grammatical correctness. '
@@ -152,7 +151,7 @@ export class LayoutService {
                 // show chat msg dialog
                 this.updateChatMsgDialogVisible(true);
                 // update questions
-                this.updateprompt(
+                this.updatePrompt(
                     'You are a writing assistant specialized in simplifying complex texts. ' +
                     'Your task is to simplify the provided text, ' +
                     'making it easier to understand while retaining the original meaning.'
@@ -167,7 +166,7 @@ export class LayoutService {
                 // show chat msg dialog
                 this.updateChatMsgDialogVisible(true);
                 // update questions
-                this.updateprompt(
+                this.updatePrompt(
                     'You are a writing assistant specialized in expanding texts. ' +
                     'Your task is to expand the provided text by adding relevant details, explanations, and examples. ' +
                     'Ensure the expanded text is coherent and maintains the original meaning.'
@@ -185,7 +184,7 @@ export class LayoutService {
                         // show chat msg dialog
                         this.updateChatMsgDialogVisible(true);
                         // update questions
-                        this.updateprompt(
+                        this.updatePrompt(
                             'You are a writing assistant specialized in adjusting the tone of texts. ' +
                             'Your task is to change the tone of the provided text to be more professional and formal. ' +
                             'Ensure the revised text is clear, concise, and retains the original meaning.'
@@ -200,7 +199,7 @@ export class LayoutService {
                         // show chat msg dialog
                         this.updateChatMsgDialogVisible(true);
                         // update questions
-                        this.updateprompt(
+                        this.updatePrompt(
                             'You are a writing assistant specialized in adjusting the tone of texts. ' +
                             'Your task is to change the tone of the provided text to be more casual and conversational. ' +
                             'Ensure the revised text is easy to read, engaging, and retains the original meaning.'
@@ -220,7 +219,7 @@ export class LayoutService {
                         // show chat msg dialog
                         this.updateChatMsgDialogVisible(true);
                         // update questions
-                        this.updateprompt(
+                        this.updatePrompt(
                             'You are a writing assistant specialized in adjusting the style of texts. ' +
                             'Your task is to change the style of the provided text to be more business-facing. ' +
                             'Ensure the revised text is professional, concise, and retains the original meaning.'
@@ -235,7 +234,7 @@ export class LayoutService {
                         // show chat msg dialog
                         this.updateChatMsgDialogVisible(true);
                         // update questions
-                        this.updateprompt(
+                        this.updatePrompt(
                             'You are a writing assistant specialized in adjusting the style of texts. ' +
                             'Your task is to change the style of the provided text to be more academic. ' +
                             'Ensure the revised text is formal, detailed, and retains the original meaning.'
@@ -371,6 +370,7 @@ export class LayoutService {
     //         // You can also update the component's state or do other processing with the yielded content here
     //     }
     // }
+
     async* getChatCompletionGenerator(
         apiToken: string,
         messages: any,
@@ -400,64 +400,64 @@ export class LayoutService {
         }
     }
 
-    fetchSuggestion(apiToken: string, userPrompt: string, systemPrompt: string, model: string): Observable<any> {
-        const messages = [
-            {
-                role: 'system',
-                content: systemPrompt
-            },
-            {
-                role: 'user',
-                content: userPrompt
-            }
-        ];
+    // fetchSuggestion(apiToken: string, userPrompt: string, systemPrompt: string, model: string): Observable<any> {
+    //     const messages = [
+    //         {
+    //             role: 'system',
+    //             content: systemPrompt
+    //         },
+    //         {
+    //             role: 'user',
+    //             content: userPrompt
+    //         }
+    //     ];
+    //
+    //     const headers = new HttpHeaders({
+    //         'Authorization': `Bearer ${apiToken}`,
+    //         'Content-Type': 'application/json'
+    //     });
+    //
+    //     const body = {
+    //         model: model,
+    //         messages: messages,
+    //         n: 1,
+    //         frequency_penalty: 1.0
+    //     };
+    //
+    //     return this.http.post<any>(environment.chatGptApiEndpoint, body, {headers: headers}).pipe(
+    //         map(response => {
+    //             const completion = response;
+    //             if (completion.choices[0].finish_reason === 'length') {
+    //                 this.sendMessage({
+    //                     severity: 'error',
+    //                     summary: 'chatGPT API Error',
+    //                     detail: `Completion finished with incomplete output, please try again with more context ${completion.choices[0].message.content}`
+    //                 })
+    //                 return [];
+    //             }
+    //
+    //             return JSON.parse(completion.choices[0].message.content).suggestions || [];
+    //         }),
+    //         catchError(error => {
+    //             this.sendMessage({
+    //                 severity: 'error',
+    //                 summary: 'chatGPT API Error',
+    //                 detail: error
+    //             })
+    //             return of([]);
+    //         })
+    //     );
+    // }
 
-        const headers = new HttpHeaders({
-            'Authorization': `Bearer ${apiToken}`,
-            'Content-Type': 'application/json'
-        });
-
-        const body = {
-            model: model,
-            messages: messages,
-            n: 1,
-            frequency_penalty: 1.0
-        };
-
-        return this.http.post<any>(environment.chatGptApiEndpoint, body, {headers: headers}).pipe(
-            map(response => {
-                const completion = response;
-                if (completion.choices[0].finish_reason === 'length') {
-                    this.sendMessage({
-                        severity: 'error',
-                        summary: 'chatGPT API Error',
-                        detail: `Completion finished with incomplete output, please try again with more context ${completion.choices[0].message.content}`
-                    })
-                    return [];
-                }
-
-                return JSON.parse(completion.choices[0].message.content).suggestions || [];
-            }),
-            catchError(error => {
-                this.sendMessage({
-                    severity: 'error',
-                    summary: 'chatGPT API Error',
-                    detail: error
-                })
-                return of([]);
-            })
-        );
-    }
-
-    private generatedTextSubject = new BehaviorSubject<string>('');
-    generatedTextObservable$ = this.generatedTextSubject.asObservable();
+    private AiGeneratedText = new BehaviorSubject<string>('');
+    AiGeneratedText$ = this.AiGeneratedText.asObservable();
 
     updateSelectionText(text: string) {
-        this.generatedTextSubject.next(text);
+        this.AiGeneratedText.next(text);
     }
 
     private pageStatus = new BehaviorSubject<boolean>(true);
-    pageStatusObservable = this.pageStatus.asObservable();
+    pageStatus$ = this.pageStatus.asObservable();
 
     updatePageStatus(newStatus: boolean) {
         this.pageStatus.next(newStatus);

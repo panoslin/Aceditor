@@ -74,14 +74,14 @@ export class AppLayoutComponent implements OnDestroy {
             });
         });
 
-        this.layoutService.promptObservable$.subscribe(text => {
+        this.layoutService.prompt$.subscribe(text => {
             this.question = text;
         });
-        this.layoutService.editorSelectedTextObservable$.subscribe(text => {
+        this.layoutService.editorSelectedText$.subscribe(text => {
             this.editorSelectedText = text;
         });
 
-        this.layoutService.chatMsgDialogVisibleObservable$.subscribe(status => {
+        this.layoutService.chatMsgDialogVisible$.subscribe(status => {
             this.chatMsgDialogVisible = status;
             if (status) {
                 this.chatDialogVisible = false;
@@ -122,7 +122,7 @@ export class AppLayoutComponent implements OnDestroy {
                 this.hideProfileMenu();
             });
 
-        this.layoutService.sendMessageObservable$.subscribe(params => {
+        this.layoutService.message$.subscribe(params => {
             this.showMessage(params.severity, params.summary, params.detail);
         });
     }

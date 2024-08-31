@@ -14,7 +14,7 @@ export class StatusComponent {
     loading: boolean = false;
 
     constructor(public layoutService: LayoutService) {
-        this.layoutService.pageStatusObservable.subscribe(status => {
+        this.layoutService.pageStatus$.subscribe(status => {
             this.loading = status;
         });
     }

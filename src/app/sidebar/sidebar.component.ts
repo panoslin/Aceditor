@@ -133,7 +133,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.layoutService.sideBarContextMenu = this.cm;
-        this.layoutService.updateSidebarDirectoryItems$.subscribe((items) => {
+        this.layoutService.sidebarDirectoryItems$.subscribe((items) => {
+            // not empty {}
             if (items && Object.keys(items).length === 0 && items.constructor === Object) {
                 return;
             }
@@ -176,7 +177,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
                         label: 'Login',
                         icon: 'pi pi-fw pi-sign-in',
                         command: () => {
-                            this.layoutService.callToggleAuthDialog();
+                            this.layoutService.toggleAuthDialog();
                         }
                     }]
                 }];
@@ -229,7 +230,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
                 parentId: parent,
                 content: file.content,
                 command: () => {
-                    this.layoutService.updateEditorHTML({
+                    this.layoutService.updateEditorContent({
                         content: file.content,
                         id: file.id,
                         name: file.name,
@@ -269,7 +270,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
                         summary: 'Success',
                         detail: `File  "${result.name}" created successfully`
                     })
-                    this.layoutService.updateSidebarDirectoryItems({
+                    this.layoutService.insertSidebarDirectoryItems({
                         label: this.newFileName,
                         icon: 'pi pi-file',
                         name: result.name,
@@ -277,7 +278,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
                         content: result.content,
                         parentId: FolderId,
                         command: () => {
-                            this.layoutService.updateEditorHTML({
+                            this.layoutService.updateEditorContent({
                                 content: result.content,
                                 id: result.id,
                                 name: result.name,
@@ -316,7 +317,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
                         summary: 'Success',
                         detail: `Folder "${result.name}" created successfully`
                     })
-                    this.layoutService.updateSidebarDirectoryItems({
+                    this.layoutService.insertSidebarDirectoryItems({
                         label: this.newFolderName,
                         icon: 'pi pi-fw pi-folder',
                         name: result.name,

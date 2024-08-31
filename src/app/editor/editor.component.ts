@@ -55,7 +55,7 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
         private authGoogleService: AuthGoogleService
     ) {
         this.toolbarItems = this.layoutService.toolbarItems;
-        this.layoutService.generatedTextObservable$.subscribe(text => {
+        this.layoutService.AiGeneratedText$.subscribe(text => {
             if (!this.savedRange) return;
             if (this.savedRange.length > 0) {
                 // replace selection
@@ -89,7 +89,7 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
             this.saveFilesOnTabs();
         }, 5000);
         this.toolbar = this.layoutService.getToolbarElementRef();
-        this.layoutService.updateEditorHTML$.subscribe((args: any) => {
+        this.layoutService.editorContent$.subscribe((args: any) => {
             // args != {}
             if (!(args && Object.keys(args).length === 0 && args.constructor === Object)) {
                 const newHTML = args.content;
