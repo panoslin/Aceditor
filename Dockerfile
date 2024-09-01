@@ -19,7 +19,7 @@ FROM nginx:alpine
 COPY --from=build /app/dist/web-editor/browser /usr/share/nginx/html
 
 # Copy a custom Nginx configuration file if needed
-# COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80 to the outside world
 EXPOSE 80
