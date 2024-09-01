@@ -116,6 +116,12 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     insertNewItemtoModel(model: any, item: MenuItem): boolean {
         // DFS model and update items
         // insert item to the MenuItem from model with id === itesm.parentId
+        // edge case:
+        if (model.length === 0) {
+            model.push(item);
+            return true;
+        }
+
         if (model.id === item['parentId']) {
             if (!model['items']) {
                 model['items'] = [];
