@@ -164,11 +164,22 @@ export class SidebarComponent implements OnInit, AfterViewInit {
                         ]
                     },
                     error: (err) => {
-                        this.layoutService.sendMessage({
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: 'Error on API requests: \n' + err.message
-                        })
+                        // if 401 in error message, then logout
+                        if (err.status === 401) {
+                            this.authService.logout();
+                            this.layoutService.sendMessage({
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: 'Authentication failed, please login again'
+                            })
+                            this.layoutService.toggleAuthDialog();
+                        } else {
+                            this.layoutService.sendMessage({
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: 'Error on API requests: \n' + err.message
+                            })
+                        }
                         this.layoutService.updatePageStatus(false);
                     },
                     complete: () => {
