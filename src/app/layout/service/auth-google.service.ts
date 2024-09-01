@@ -1,5 +1,4 @@
 import {inject, Injectable} from '@angular/core';
-import {Router} from '@angular/router';
 import {AuthConfig, OAuthEvent, OAuthService} from 'angular-oauth2-oidc';
 import {BehaviorSubject, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
@@ -15,10 +14,9 @@ export interface UserProfile {
 })
 export class AuthGoogleService {
     private oAuthService = inject(OAuthService);
-    private router = inject(Router);
 
-    private userProfileSubject: BehaviorSubject<UserProfile | null> = new BehaviorSubject<UserProfile | null>(null);
-    public userProfile$: Observable<UserProfile | null> = this.userProfileSubject.asObservable();
+    private userProfile: BehaviorSubject<UserProfile | null> = new BehaviorSubject<UserProfile | null>(null);
+    public userProfile$: Observable<UserProfile | null> = this.userProfile.asObservable();
 
     constructor(private http: HttpClient) {
         this.initConfiguration();
@@ -31,7 +29,7 @@ export class AuthGoogleService {
                         email: profile['email'],
                         imageUrl: profile['picture'],
                     }
-                    this.userProfileSubject.next(userProfile);
+                    this.userProfile.next(userProfile);
                     return userProfile;
                 }
             }
@@ -79,6 +77,7 @@ export class AuthGoogleService {
     logout() {
         this.oAuthService.revokeTokenAndLogout();
         this.oAuthService.logOut();
+        this.userProfile.next(null);
     }
 
     getProfile() {
@@ -89,7 +88,7 @@ export class AuthGoogleService {
                 email: profile['email'],
                 imageUrl: profile['picture'],
             }
-            this.userProfileSubject.next(userProfile);
+            this.userProfile.next(userProfile);
             return userProfile;
         }
         return null;

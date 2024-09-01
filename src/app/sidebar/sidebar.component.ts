@@ -170,7 +170,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
                             this.layoutService.sendMessage({
                                 severity: 'error',
                                 summary: 'Error',
-                                detail: 'Authentication failed, please login again'
+                                detail: 'Authentication expired, please login again'
                             })
                             this.layoutService.toggleAuthDialog();
                         } else {
