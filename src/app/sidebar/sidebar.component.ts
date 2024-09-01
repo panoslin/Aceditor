@@ -148,6 +148,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         })
         this.authService.userProfile$.subscribe((profile) => {
             if (profile) {
+                this.layoutService.updatePageStatus(true);
                 this.fetchRoot(profile).subscribe({
                     next: (results) => {
                         if (!results) {
