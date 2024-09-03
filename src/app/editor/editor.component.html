@@ -51,7 +51,7 @@
 <!--  </ng-template>-->
 <!--</p-editor>-->
 
-<div class="p-editor-container" style="height: 85vh">
+<div class="p-editor-container">
     <div *ngIf="tabs.length > 0" class="card" style="padding: 0; margin-bottom: 1rem">
         <p-tabView (onChange)="onTabChange($event)" [(activeIndex)]="activeIndex" [scrollable]="true"  (onClose)="onTabClose($event)">
             <p-tabPanel *ngFor="let tab of tabs" [closable]="true">
