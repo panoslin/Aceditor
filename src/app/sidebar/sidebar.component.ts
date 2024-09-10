@@ -117,8 +117,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         // DFS model and update items
         // insert item to the MenuItem from model with id === itesm.parentId
         // edge case:
-        if (model.length === 0) {
-            model.push(item);
+        if (model.items.length === 0) {
+            model.items.push(item);
             return true;
         }
 
