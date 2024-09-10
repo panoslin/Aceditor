@@ -169,8 +169,8 @@ export class SidebarComponent implements OnInit, AfterViewInit {
                         if (err.status === 401) {
                             this.authService.logout();
                             this.layoutService.sendMessage({
-                                severity: 'error',
-                                summary: 'Error',
+                                severity: 'warn',
+                                summary: 'Session Expired',
                                 detail: 'Authentication expired, please login again'
                             })
                             this.layoutService.toggleAuthDialog();
