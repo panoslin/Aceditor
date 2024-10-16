@@ -40,7 +40,7 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
     toolbar!: ElementRef;
     quill!: Quill;
 
-    placeholder: string = `<h1><span style="color: rgb(74, 144, 226);">Welcome to Your New Text Editor! ✨</span></h1><p><span style="color: rgb(0, 0, 0);">Get ready to elevate your writing experience like never before! </span></p><p><span style="color: rgb(0, 0, 0);">Our innovative text editor, is designed specifically to enhance your writing journey. </span></p><p><span style="color: rgb(0, 0, 0);">With amazing features and a user-friendly interface, you'll be able to create, organize, and refine your documents seamlessly. 🌟</span></p><h2><span style="color: rgb(0, 0, 0);">🚀 Key Features:</span></h2><ol><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span><strong style="color: rgb(0, 0, 0);">File and Directory Management:</strong><span style="color: rgb(0, 0, 0);">&nbsp;Create and organize your documents with ease, keeping all your writings structured and accessible. 📁</span></li><li data-list="ordered" class="ql-indent-1"><span class="ql-ui" contenteditable="false"></span>Add new text/directory by clicking the ➕ icon on the top menu bar</li><li data-list="ordered" class="ql-indent-1"><span class="ql-ui" contenteditable="false"></span>Click the 📂 icon to show all the created files and folders</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span><strong style="color: rgb(0, 0, 0);">AI Powered Assistance:</strong><span style="color: rgb(0, 0, 0);">&nbsp;Harness the power of&nbsp;</span><strong style="color: rgb(0, 0, 0);">ChatGPT</strong><span style="color: rgb(0, 0, 0);">&nbsp;to enhance your writing with intelligent suggestions and insights. 🤖✍️</span></li><li data-list="ordered" class="ql-indent-1"><span class="ql-ui" contenteditable="false"></span>Click the ⚙️ icon to the top-right corner of the page and enter your <a href="https://platform.openai.com/api-keys" rel="noopener noreferrer" target="_blank">ChatAPT API token</a>.</li><li data-list="ordered" class="ql-indent-1"><span class="ql-ui" contenteditable="false"></span>Try to <strong style="color: rgb(0, 0, 0);">highlight a sentence and:</strong></li><li data-list="ordered" class="ql-indent-2"><span class="ql-ui" contenteditable="false"></span><strong style="color: rgb(0, 0, 0);">Click the purpose sparkling menu OR </strong></li><li data-list="ordered" class="ql-indent-2"><span class="ql-ui" contenteditable="false"></span><strong style="color: rgb(0, 0, 0);">Select quick prompts from the dropdown menu </strong></li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span><strong style="color: rgb(0, 0, 0);">Secure Login:</strong><span style="color: rgb(0, 0, 0);">&nbsp;Utilize Single Sign-On (SSO) with your Google account for a secure and synchronized experience across all your devices. 🔒</span></li><li data-list="ordered" class="ql-indent-1"><span class="ql-ui" contenteditable="false"></span>Login by clicking the 👤 icon</li></ol><p><br></p><p><span style="color: rgb(0, 0, 0);">Start your writing adventure with us and unlock new possibilities! Happy writing! 📝</span></p><p><span style="color: rgb(0, 0, 0);">Any Issue? Raise it in </span><a href="https://github.com/panoslin/Aceditor/issues" rel="noopener noreferrer" target="_blank" style="color: rgb(0, 0, 0);">Github</a></p><p><br></p><p><br></p>`;
+    placeholder: string = `<h1><span style="color: rgb(74, 144, 226);">Welcome to Your New Text Editor! ✨</span></h1><p><span style="color: rgb(0, 0, 0);">Get ready to elevate your writing experience like never before! </span></p><p><span style="color: rgb(0, 0, 0);">Our innovative text editor is designed specifically to enhance your writing journey. </span></p><p><span style="color: rgb(0, 0, 0);">With amazing features and a user-friendly interface, you'll be able to create, organize, and refine your documents seamlessly. 🌟</span></p><h2><span style="color: rgb(0, 0, 0);">🚀 Key Features:</span></h2><ol><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span><strong style="color: rgb(0, 0, 0);">File and Directory Management:</strong><span style="color: rgb(0, 0, 0);">&nbsp;Create and organize your documents with ease, keeping all your writings structured and accessible. 📁</span></li><li data-list="ordered" class="ql-indent-1"><span class="ql-ui" contenteditable="false"></span>Add new text/directory by clicking the ➕ icon on the top menu bar</li><li data-list="ordered" class="ql-indent-1"><span class="ql-ui" contenteditable="false"></span>Click the 📂 icon to show all the created files and folders</li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span><strong style="color: rgb(0, 0, 0);">AI Powered Assistance:</strong><span style="color: rgb(0, 0, 0);">&nbsp;Harness the power of&nbsp;</span><strong style="color: rgb(0, 0, 0);">ChatGPT</strong><span style="color: rgb(0, 0, 0);">&nbsp;to enhance your writing with intelligent suggestions and insights. 🤖✍️</span></li><li data-list="ordered" class="ql-indent-1"><span class="ql-ui" contenteditable="false"></span>Click the ⚙️ icon to the top-right corner of the page and enter your <a href="https://platform.openai.com/api-keys" rel="noopener noreferrer" target="_blank">ChatGPT API token</a>. Don't worry, your token is only stored locally on your browser 🔐</li><li data-list="ordered" class="ql-indent-1"><span class="ql-ui" contenteditable="false"></span>Try to <strong style="color: rgb(0, 0, 0);">highlight a sentence and:</strong></li><li data-list="ordered" class="ql-indent-2"><span class="ql-ui" contenteditable="false"></span><strong style="color: rgb(0, 0, 0);">Click the purple sparkling menu OR </strong></li><li data-list="ordered" class="ql-indent-2"><span class="ql-ui" contenteditable="false"></span><strong style="color: rgb(0, 0, 0);">Select quick prompts from the dropdown menu </strong></li><li data-list="ordered"><span class="ql-ui" contenteditable="false"></span><strong style="color: rgb(0, 0, 0);">Secure Login:</strong><span style="color: rgb(0, 0, 0);">&nbsp;Utilize Single Sign-On (SSO) with your Google account for a secure and synchronized experience across all your devices. 🔒</span></li><li data-list="ordered" class="ql-indent-1"><span class="ql-ui" contenteditable="false"></span>Login by clicking the 👤 icon</li></ol><p><br></p><p><span style="color: rgb(0, 0, 0);">Start your writing adventure with us and unlock new possibilities! Happy writing! 📝</span></p><p><span style="color: rgb(0, 0, 0);">Any Issues? Raise them in </span><a href="https://github.com/panoslin/Aceditor/issues" rel="noopener noreferrer" target="_blank" style="color: rgb(0, 0, 0);">Github</a></p><p><br></p><p><br></p>`;
     toolbarItems!: MenuItem[];
     private savedRange!: any;
     private editorHasFocus: boolean = true;
@@ -64,12 +64,15 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
             this.quill.clipboard.dangerouslyPasteHTML(this.savedRange.index, text)
         });
     }
+
     ngOnDestroy() {
         if (this.intervalId) {
             clearInterval(this.intervalId);
         }
     }
+
     private intervalId: any;
+
     saveFilesOnTabs() {
         // for each tab call saveFileContent
         this.tabs.forEach((tab: any) => {
@@ -84,6 +87,7 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
             ).subscribe();
         })
     }
+
     ngOnInit(): void {
         this.intervalId = setInterval(() => {
             this.saveFilesOnTabs();
@@ -101,7 +105,12 @@ export class EditorComponent implements AfterViewInit, OnInit, OnDestroy {
                 if (index === -1) {
                     const localStorageHTML = localStorage.getItem(`editorHTML-${fileId}`);
                     this.editor.nativeElement.querySelector('.ql-editor').innerHTML = localStorageHTML || newHTML;
-                    this.tabs.push({title: fileName, content: localStorageHTML || newHTML, fileId: fileId, parent: parent});
+                    this.tabs.push({
+                        title: fileName,
+                        content: localStorageHTML || newHTML,
+                        fileId: fileId,
+                        parent: parent
+                    });
                     this.cdr.detectChanges();
                     this.activeIndex = this.tabs.length - 1;
                 } else {
